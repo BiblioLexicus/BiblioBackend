@@ -32,8 +32,27 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
   `Price` DECIMAL(4,2) UNSIGNED NOT NULL,
-  PRIMARY KEY (`ID_Works`),
+  PRIMARY KEY (`ID_Works`, `ID_Library`),
   UNIQUE INDEX `idOuvrages_UNIQUE` (`ID_Works` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`Donnees_Bibiliotheque`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Donnees_Bibiliotheque` (
+  `Schedule` VARCHAR(11) NOT NULL,
+  `Postal_Code` VARCHAR(6) NOT NULL,
+  `Library_Website` VARCHAR(45) NOT NULL,
+  `Phone_Address` VARCHAR(14) NOT NULL,
+  `Library_Name` VARCHAR(45) NULL,
+  `ID_Library` VARCHAR(2) NOT NULL,
+  PRIMARY KEY (`ID_Library`),
+  CONSTRAINT `fk_Donnees_Bibiliotheque_Work_List1`
+    FOREIGN KEY (`ID_Library`)
+    REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Library`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -53,32 +72,6 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   PRIMARY KEY (`ID_Users`),
   UNIQUE INDEX `Courriel_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Utilisateur_UNIQUE` (`ID_Users` ASC) VISIBLE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`Donnees_Bibiliotheque`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Donnees_Bibiliotheque` (
-  `ID_Works` VARCHAR(16) NOT NULL,
-  `ID_Users` VARCHAR(16) NOT NULL,
-  `Schedule` VARCHAR(11) NOT NULL,
-  `Postal_Code` VARCHAR(6) NOT NULL,
-  `Library_Website` VARCHAR(45) NOT NULL,
-  `Phone_Address` VARCHAR(14) NOT NULL,
-  PRIMARY KEY (`ID_Works`, `ID_Users`),
-  UNIQUE INDEX `ID_Bibiliotheque_UNIQUE` (`ID_Works` ASC) VISIBLE,
-  UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE,
-  CONSTRAINT `fk_Donnees_Bibiliotheque_Work_List1`
-    FOREIGN KEY (`ID_Works`)
-    REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
-    FOREIGN KEY (`ID_Users`)
-    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
