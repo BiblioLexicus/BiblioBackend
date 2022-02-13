@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `Type_Work` VARCHAR(2) NOT NULL,
   `Price` DECIMAL(4,2) UNSIGNED NOT NULL,
   PRIMARY KEY (`ID_Works`, `ID_Library`),
-  UNIQUE INDEX `idOuvrages_UNIQUE` (`ID_Works` ASC) VISIBLE)
+  UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   `Permissions` VARCHAR(2) NOT NULL DEFAULT '00',
   `Related_Library_ID` VARCHAR(2),
   PRIMARY KEY (`ID_Users`),
-  UNIQUE INDEX `Courriel_UNIQUE` (`Email` ASC) VISIBLE,
-  UNIQUE INDEX `ID_Utilisateur_UNIQUE` (`ID_Users` ASC) VISIBLE)
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
+  UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Loaned_Works` (
   `ID_Users` VARCHAR(16) NOT NULL,
   `Work_Lost` BIT NOT NULL,
   PRIMARY KEY (`ID_Works`, `ID_Users`),
-  UNIQUE INDEX `ID_Ouvrage_UNIQUE` (`ID_Works` ASC) VISIBLE,
+  UNIQUE INDEX `ID_Works_UNIQUE` (`ID_Works` ASC) VISIBLE,
   INDEX `fk_Ouvrages_Emprunte_User_List1_idx` (`ID_Users` ASC) VISIBLE,
   CONSTRAINT `fk_Ouvrages_Emprunte_Work_List`
     FOREIGN KEY (`ID_Works`)
