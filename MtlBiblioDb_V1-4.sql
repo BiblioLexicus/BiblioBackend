@@ -38,9 +38,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`Donnees_Bibiliotheque`
+-- Table `BiblioLexicusDB`.`Libraries_Data`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Donnees_Bibiliotheque` (
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   `Schedule` VARCHAR(11) NOT NULL,
   `Postal_Code` VARCHAR(6) NOT NULL,
   `Library_Website` VARCHAR(45) NOT NULL,
@@ -51,8 +51,13 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Donnees_Bibiliotheque` (
   CONSTRAINT `fk_Donnees_Bibiliotheque_Work_List1`
     FOREIGN KEY (`ID_Library`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Library`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE DELETE
+    ON UPDATE CASCADE,
+CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
+    FOREIGN KEY (`ID_Users`)
+    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
+    ON DELETE DELETE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -69,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   `Addresse_Postale` VARCHAR(6) NOT NULL,
   `Expiration_Subscription` DATE NOT NULL,
   `Permissions` VARCHAR(2) NOT NULL DEFAULT '00',
+  `Related_Library_ID` VARCHAR(2),
   PRIMARY KEY (`ID_Users`),
   UNIQUE INDEX `Courriel_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Utilisateur_UNIQUE` (`ID_Users` ASC) VISIBLE)
@@ -76,9 +82,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`Ouvrages_Emprunte`
+-- Table `BiblioLexicusDB`.`Loaned_Works`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Ouvrages_Emprunte` (
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Loaned_Works` (
   `ID_Works` VARCHAR(16) NOT NULL,
   `End_Loan_Date` DATE NOT NULL,
   `ID_Users` VARCHAR(16) NOT NULL,
@@ -90,19 +96,19 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Ouvrages_Emprunte` (
     FOREIGN KEY (`ID_Works`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Ouvrages_Emprunte_User_List1`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`Commentaires`
+-- Table `BiblioLexicusDB`.`Comments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Commentaires` (
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Comments` (
   `ID_Comments` INT NOT NULL,
   `ID_Works` VARCHAR(16) NOT NULL,
   `ID_Users` VARCHAR(16) NOT NULL,
@@ -116,12 +122,12 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Commentaires` (
     FOREIGN KEY (`ID_Works`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Commentaires_User_List1`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
