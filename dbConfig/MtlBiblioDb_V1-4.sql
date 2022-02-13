@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   CONSTRAINT `fk_Donnees_Bibiliotheque_Work_List1`
     FOREIGN KEY (`ID_Library`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Library`)
-    ON DELETE DELETE
+    ON DELETE NO ACTION
     ON UPDATE CASCADE,
 CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
-    ON DELETE DELETE
+    ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
