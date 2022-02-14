@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `State` BIT NOT NULL,
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
-  `Price` DECIMAL(4,2) UNSIGNED NOT NULL,
+  `Price` DECIMAL(10,4) UNSIGNED NOT NULL,
   PRIMARY KEY (`ID_Works`, `ID_Library`),
   UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -61,7 +61,6 @@ CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`User_List`
 -- -----------------------------------------------------
@@ -80,7 +79,6 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`Loaned_Works`
@@ -135,3 +133,8 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+INSERT INTO `BiblioLexicusDB`.`Works` 
+VALUES (OO12121234567801,randomTitle,randomName,2001-01-01,randomEditionHouse,1L,256,bla bla bla uiyguyftr6r,FA,Fr,0,1,Mo,0.15,2)
