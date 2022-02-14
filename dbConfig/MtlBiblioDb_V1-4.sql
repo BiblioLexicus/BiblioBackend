@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `State` BIT NOT NULL,
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
-  `Price` DECIMAL(10,4) UNSIGNED NOT NULL,
+  `Price` DECIMAL(6,4) UNSIGNED NOT NULL,
   PRIMARY KEY (`ID_Works`, `ID_Library`),
   UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -137,7 +137,7 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-
+--essai d'une valeur random
 
 INSERT INTO `BiblioLexicusDB`.`Works` 
-VALUES (OO12121234567801,randomTitle,randomName,2001-01-01,randomEditionHouse,1L,256,bla bla bla uiyguyftr6r,FA,Fr,0,1,Mo,0.15,2)
+VALUES (OO12121234567801,randomTitle,randomName,2001-01-01,randomEditionHouse,1L,256,bla bla bla uiyguyftr6r,FA,Fr,0,1,Mo,1.1511,4)
