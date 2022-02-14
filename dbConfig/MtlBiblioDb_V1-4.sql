@@ -52,11 +52,14 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   CONSTRAINT `fk_Donnees_Bibiliotheque_Work_List1`
     FOREIGN KEY (`ID_Library`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Library`)
+    --avant, ici c'était on delete delete...  mais on verra si cest mieux presentement
     ON DELETE CASCADE
     ON UPDATE CASCADE,
 CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
     FOREIGN KEY (`ID_Users`)
-    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
+    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)      
+    --avant, ici c'était on delete delete...  mais on verra si cest mieux presentement... même commentaire que plus haut
+
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
