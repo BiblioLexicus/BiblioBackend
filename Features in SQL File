@@ -2,3 +2,21 @@
 2) Loaned work list with expiration date, possibility of lost work and all loaned works are linked to the specific user
 3) Library list with schedule, members, website, name & ID
 4) Work list with authors, lenght, publication date, etc.
+
+Note: id_works et id_Users est la réunion de plusieurs informations
+les deux premiers chiffres représentent l'Id bilbio ou le livre est
+les deux suivants représentent l'ID du type de l'ouvrage
+les deux suivants représentent l'ID du genre de l'ouvrege
+les 8 suivants représentent l'ID réel
+les 2 derniers représentent le no de la copie (si multiples)
+
+ID user
+deux premiers chiffres représentent bibliothèque assignée
+note: 00 est pour un utilisateur non relié à une bilbiothèque
+un utilisateur lié à une bibliothèque est un employé ou un administateur
+
+les 12 chiffres suivants représentent l'ID de l'utilisateur
+
+les deux derniers chiffres représentent les permissions de l'utilisateur (admin, admin système, bibliothécaire/employé, utilisateur lambda (noté 00))
+
+Note: idée: on peut spécifier l'âge recommandé dans le genre du livre (ex: 13+, 18+) et restreindre les utilisateurs dans le backend, si voulu
