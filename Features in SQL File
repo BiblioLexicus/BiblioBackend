@@ -20,3 +20,32 @@ les 12 chiffres suivants représentent l'ID de l'utilisateur
 les deux derniers chiffres représentent les permissions de l'utilisateur (admin, admin système, bibliothécaire/employé, utilisateur lambda (noté 00))
 
 Note: idée: on peut spécifier l'âge recommandé dans le genre du livre (ex: 13+, 18+) et restreindre les utilisateurs dans le backend, si voulu
+
+
+tags: 
+tag librairies
+vu que tous peuvent faire une librairie, on devrait faire qqchose d'unique et ajouter un hashmap qui relie les tags avec les librairies (en langage human lisible)
+note: se garder un tag de bibliothèque pour les users sans biblio sous leur responsabilité ex: 00
+
+tag genre (Note: pas trop mettre de genre sinon ça va être le bordel. La liste n'est pas limité à ce qui est mis présentement mais ne pas abuser)
+FA: fantasy
+SF: science fiction
+HO: horror
+DC: documentaire
+PO: Policier/polar
+NF: "non-Fiction"
+BI: biographie/autobiographie
+NC: non classified/unclassifiable
+AD: littérature adulte /penser graphique... ;)
+note: si on veux age restrict les livres avec les tags sur le genre, on peut utiliser les majuscules et les minuscules, genre fantasy everyone = fa, fantasy pg13 = Fa, fantasy pg16 = fA, fantasy pg18 = FA
+
+tags type
+Bo: book
+Mo: movie
+BG: board game
+VG: video game
+MA: manga
+BD: bande dessinee
+OO: other
+
+
