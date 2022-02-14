@@ -41,6 +41,7 @@ ENGINE = InnoDB;
 -- Table `BiblioLexicusDB`.`Libraries_Data`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
+  `ID_Users` VARCHAR(16) NOT NULL,
   `Schedule` VARCHAR(11) NOT NULL,
   `Postal_Code` VARCHAR(6) NOT NULL,
   `Library_Website` VARCHAR(45) NOT NULL,
