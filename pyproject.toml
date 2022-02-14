@@ -11,6 +11,7 @@ flake8 = "^4.0.1"
 isort = "^5.10.1"
 Django = "^4.0.2"
 pre-commit = "^2.17.0"
+python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

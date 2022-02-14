@@ -1,10 +1,10 @@
 import datetime
 from typing import List, Optional
+from abc import ABC, abstractmethod
 from enum import Enum
 
 from django.contrib.auth.models import User
 from django.db import models
-
 
 class Permission(Enum):
     """
@@ -19,7 +19,6 @@ class Permission(Enum):
     LIBRARY_MANAGEMENT = 1
     ITEM_MANAGEMENT = 2
     USER_MANAGEMENT = 3
-
 
 class Loan:
     """
@@ -88,6 +87,21 @@ class VideoGame(Item):
     platform: str
 
 
+"""class User(User):
+    # Users
+    # Abstract class that is the base of all user types.
+    
+
+    id: int
+    name: str
+    mdp: str
+    
+
+    @abstractmethod
+    def to_dict(self, user: User):
+        pass"""
+
+
 class Client(User):
     """A normal client.
 
@@ -123,7 +137,7 @@ class Admin(Client):
     library_id: Optional[int]
 
     def to_dict(self, user: User) -> dict:
-        us = super(Admin, self).to_dict()
+        us = super.to_dict()
 
         us.update({
             'permissions': [permission for permission in self.permissions],
@@ -136,7 +150,6 @@ class Admin(Client):
             })
 
         return us
-
 
 class Library(models):
     """Library"""
