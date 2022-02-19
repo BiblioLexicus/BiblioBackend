@@ -25,9 +25,10 @@ jobs:
       run: |
         python -m pip install --upgrade poetry
         poetry install
+        poetry shell
     - name: Run Tests
       run: |
-        cd backend
+        cd Backend
         python manage.py test
         
     - name: PyCharm Python Security Scanner
