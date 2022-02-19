@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `State` BIT NOT NULL,
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
-  `Price` DECIMAL(4,2) UNSIGNED NOT NULL,
+  `Price` DECIMAL(5,3) UNSIGNED NOT NULL,
   PRIMARY KEY (`ID_Works`),
   UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
 ENGINE = InnoDB;
