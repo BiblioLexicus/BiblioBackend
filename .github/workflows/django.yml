@@ -27,9 +27,7 @@ jobs:
         poetry install
     - name: Run Tests
       run:
-        pwd
         cd Backend
-        ls
         poetry run python manage.py test
         
     - name: PyCharm Python Security Scanner
