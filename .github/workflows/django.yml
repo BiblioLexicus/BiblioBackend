@@ -26,9 +26,7 @@ jobs:
         python -m pip install --upgrade poetry
         poetry install
     - name: Run Tests
-      run: |
-        pwd
-        ls
+      run:
         poetry run python Backend/manage.py test
         
     - name: PyCharm Python Security Scanner
