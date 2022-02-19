@@ -27,7 +27,10 @@ jobs:
         poetry install
     - name: Run Tests
       run:
-        poetry run python Backend/manage.py test
+        pwd
+        cd Backend
+        ls
+        poetry run python manage.py test
         
     - name: PyCharm Python Security Scanner
     # You may pin to the exact commit or the version.
