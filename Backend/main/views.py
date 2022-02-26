@@ -6,6 +6,7 @@ from django.shortcuts import render
 from .forms import Rechercher
 
 default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
+organisation_name = os.getenv("ORGANISATION_NAME")
 
 
 def home(response):
