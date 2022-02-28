@@ -19,7 +19,6 @@ def main():
         prog="BiblioLexicus Setup",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prefix_chars="-",
-        fromfile_prefix_chars="@",
     )
     # Project specific
     parser.add_argument(
