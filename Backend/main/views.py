@@ -93,8 +93,25 @@ def settings(response):
 
 
 def panier(response):
-    return HttpResponse("Panier de l'utilisateur.")
+    liste_emprunts = ["livre 1", "livre 2", "livre 3"]
+
+    return render(
+        response, "main/panier.html", {"liste_emprunts": liste_emprunts} | default_dict
+    )
 
 
 def librairie(response, id):
-    return HttpResponse("Page de la librairie -> id: " + str(id))
+    librairie_nom = "Bibliothèque de Montreal"
+    adresse = "rue de montreal"
+    heures_ouverture = "8am à 9pm"
+
+    return render(
+        response,
+        "main/librairie.html",
+        {
+            "librairie_nom": librairie_nom,
+            "adresse": adresse,
+            "heures_ouverture": heures_ouverture,
+        }
+        | default_dict,
+    )
