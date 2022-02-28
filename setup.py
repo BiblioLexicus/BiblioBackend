@@ -53,10 +53,26 @@ def main():
         default="BiblioLexicus",
         help=f"The name of the organisation.{default()}",
     )
-    parser.add_argument("--auto", nargs="?", const=True, default=False)
+    parser.add_argument(
+        "--deploy",
+        dest="DEBUG",
+        nargs="?",
+        const=False,
+        default=True,
+        help=f"needed when the application is meant for deployment.{default()}",
+    )
+    parser.add_argument(
+        "--auto",
+        nargs="?",
+        const=True,
+        default=False,
+        help="uses default variables. Use --DB_PASSWORD <password> at the same time.",
+    )
 
     # General
-    parser.add_argument("--verbose", "-v", nargs="?", const=True, default=False)
+    parser.add_argument(
+        "--verbose", "-v", nargs="?", const=True, default=False, help="be verbose"
+    )
     parser.add_argument("--version", action="version", version="%(prog)s 0.1")
 
     args = parser.parse_args()
@@ -115,6 +131,7 @@ def main():
 
     output = "\n".join(
         [f"SECRET_KEY={get_random_secret_key()}"]
+        + [f"DEBUG={getattr(args, 'DEBUG')}"]
         + [f"{envv}={envs[envv]}" for envv in envs]
     )
 
