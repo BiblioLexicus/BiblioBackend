@@ -32,7 +32,7 @@ jobs:
         mysql user: 'DB_ADMIN'
         mysql password: ${{ secrets.DB_PASSWD }}
     - name: Set up project
-      run: poetry run python setup.py --auto --DB_PASSWORD ${{ secrets.DB_PASSWD }}
+      run: poetry run python setup.py --debug -v --ci_test --DB_PASSWORD ${{ secrets.DB_PASSWD }}
     - name: Run Tests
       working-directory: ./Backend
       run:
