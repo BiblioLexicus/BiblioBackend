@@ -111,6 +111,31 @@ def main():
         default=False,
         help=f"if to skip moving html files from another repository.{default()}",
     )
+    pages_group = parser.add_mutually_exclusive_group()
+    pages_group.add_argument(
+        "--default_rep",
+        dest="DEFAULT_REP",
+        nargs="?",
+        const=True,
+        default=False,
+        help=f"if to clone pages from the default repository.{default()}",
+    )
+    pages_group.add_argument(
+        "--custom_rep",
+        dest="CUSTOM_REP",
+        nargs="?",
+        const=True,
+        default=False,
+        help=f"if to clone pages from a custom repository.{default()}",
+    )
+    pages_group.add_argument(
+        "--local_rep",
+        dest="LOCAL_REP",
+        nargs="?",
+        const=True,
+        default=False,
+        help=f"if to get pages from a local repository.{default()}",
+    )
 
     # General
     parser.add_argument(
@@ -244,30 +269,33 @@ def main():
             f.write(mv_helper)
         log.debug("Write successful!\n")
 
-        # Getting the html source
-        question = [
-            {
-                "type": "list",
-                "name": "html_source",
-                "message": "Where do you want to take the html files from?:",
-                "choices": [
-                    "Clone the default repository",
-                    "Clone a different repository",
-                    "From a local path",
-                ],
-            }
-        ]
+        if not args.DEFAULT_REP and not args.CUSTOM_REP and not args.LOCAL_REP:
+            # Getting the html source
+            question = [
+                {
+                    "type": "list",
+                    "name": "html_source",
+                    "message": "Where do you want to take the html files from?:",
+                    "choices": [
+                        "Clone the default repository",
+                        "Clone a different repository",
+                        "From a local path",
+                    ],
+                }
+            ]
 
-        answer = prompt(question)["html_source"]
+            answer = prompt(question)["html_source"]
+        else:
+            answer = ""
 
         # Choose source and clone files if needed
-        if answer == "Clone the default repository":
+        if answer == "Clone the default repository" or args.DEFAULT_REP:
             log.debug("\nCloning default repo....")
             html_repo = default_html_repository
             os.makedirs(html_repo_path, exist_ok=True)
             Repo.clone_from(html_repo, html_repo_path)
             log.debug("Clone successful!")
-        elif answer == "Clone a different repository":
+        elif answer == "Clone a different repository" or args.CUSTOM_REP:
             question = [
                 {
                     "type": "input",
@@ -280,7 +308,7 @@ def main():
             os.makedirs(html_repo_path, exist_ok=True)
             Repo.clone_from(html_repo, html_repo_path)
             log.debug("Cloning successful!")
-        else:
+        elif answer == "From a local path" or args.LOCAL_REP:
             question = [
                 {
                     "type": "input",
@@ -297,11 +325,11 @@ def main():
         html_repo_path += "html/"  # Mover script
         command = (
             f"python {mover_helper_file} --project_path {project_path} --project_name {project_name} "
-            f"--operation {operation} --local {html_repo_path}"
+            f"--operation {operation} --local {html_repo_path} --no_confirm"
         )
 
         log.info("\nStarting mover script...")
-        log.debug("> " + command)
+        log.info("> " + command)
         os.system(
             command
         )  # This code is safe. It will only copy the files from the html repository to the project.
@@ -311,7 +339,7 @@ def main():
         log.debug("\nDeleting non-necessary files...")
         # Delete non-necessary files
         os.remove(mover_helper_file)
-        if answer != "From a local path":
+        if answer != "From a local path" or not args.LOCAL_REP:
             rmtree(re.sub("html/", "", html_repo_path))
         log.debug("Deleting done!")
 
