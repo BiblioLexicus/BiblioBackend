@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{name}}{% endblock %}
+
+{% block content %} 
+<h1> Résultats de la recherche: {{name}} </h1>
+
+<ul class="list-group">
+    {% if liste_livres|length > 0 %}
+        {% for livres in liste_livres %}
+                <li class="elements">{{livres}} 
+                    <button type="submit" class="btn btn-primary" name="moreInfo">Plus d'informations</button>
+        {% endfor %}
+    {% else %}
+        Aucun résultat trouvé.
+    {% endif %}
+</ul>
+
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block title %} Libraire {% endblock %}
+
+{% block content %}
+    <h1>{{librairie_nom}}</h1>
+
+    <h3>Informations</h3>
+    <ul>
+        <li><p>Adresse: {{adresse}}</p></li>
+        <li><p>Heures d'ouverture: {{heures_ouverture}}</p></li>
+    </ul>
+{% endblock %}
