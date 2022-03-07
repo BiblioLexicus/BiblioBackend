@@ -7,8 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-# TODO check that all classes are well generated - will do after that it has been merged to Dev
-
 
 class Comments(models.Model):
     id_comments = models.IntegerField(
