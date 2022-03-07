@@ -24,6 +24,27 @@ def search(response, name):
 
 
 def item(response, id):
+    types_ouvrages = {
+        "AB": "Album",
+        "dJ": "DVD Jeunes",
+        "da": "DVD Adolescents",
+        "dA": "DVD Adultes",
+        "DC": "Disque Compact",
+        "js": "Jeu de societe",
+        "JJ": "Jeu Video Jeunes",
+        "Ja": "Jeu Video Adolescents",
+        "JA": "Jeu Video Adultes",
+        "PJ": "Periodique Jeunes",
+        "PA": "Periodique Adultes",
+        "rJ": "Reference Jeunes",
+        "rA": "Reference Adultes",
+        "RJ": "Roman Jeunes",
+        "Ra": "Roman Adolescents",
+        "RA": "Roman Adultes"
+    }
+    genre_ouvrage = {
+
+    }
     item_name = "Item"
     item_author = "Author"
     item_res = (
