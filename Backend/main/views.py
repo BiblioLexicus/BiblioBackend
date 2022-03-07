@@ -1,33 +1,117 @@
-from re import L
+import os
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
+from .forms import Rechercher
 
-# Page d'acceuil du site web
+default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
+organisation_name = os.getenv("ORGANISATION_NAME")
+
+
 def home(response):
-    return HttpResponse("Page d'acceuil \n <ul> <li>Barre de recherche</li> <li>Connexion ou creation de compte</li></ul> "
-                        "<a href=search/test>Search</a> <a href=item/1>Item</a> <a href=administration>Admin</a> <a href=profile>Profile</a> "
-                        "<a href=profile/settings>Settings</a> <a href=panier>Panier</a> <a href=librairie/1>Librairie</a>")
+    # Page d'acceuil du site web
+    form = Rechercher()
+
+    return render(response, "main/acceuil.html", {"form": form} | default_dict)
+
 
 def search(response, name):
-    return HttpResponse("Page affichant la liste de livres recherchés. <a href=/>Retour</a> </br> Votre Recherche: " + name)
+    return HttpResponse(
+        "Page affichant la liste de livres recherchés. <a href=/>Retour</a> </br> Votre Recherche: "
+        + name
+    )
+
 
 def item(response, id):
-    return HttpResponse("Page spécifique à un livre dans une libraire. <ul><li>Affichage des informations sur le livre</li><li>Boutton pour pouvoir emprunter un livre</li>"
-                        "<li>Section Commentaire</li></ul> id du livre: " + str(id))
+    item_name = "Item"
+    item_author = "Author"
+    item_res = (
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore "
+        "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+        "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse "
+        "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa "
+        "qui officia deserunt mollit anim id est laborum. "
+    )
+    item_img = "https://cdn.discordapp.com/attachments/792090502760890379/945444402409664562/image_final_intro.png"
+    item_edition = "Edition"
+    item_publisher = "Publish"
+    """return HttpResponse(
+        "Page spécifique à un livre dans une libraire. <ul><li>Affichage des informations sur le "
+        "livre</li><li>Boutton pour pouvoir emprunter un livre</li> <li>Section Commentaire</li></ul> "
+        "id du livre: " + str(id)
+    )"""
+    return render(
+        response,
+        "main/item.html",
+        {
+            "item_img": item_img,
+            "item_name": item_name,
+            "item_res": item_res,
+            "item_publisher": item_publisher,
+            "item_edition": item_edition,
+            "item_author": item_author,
+        }
+        | default_dict,
+    )
+
 
 def administration(response):
-    return HttpResponse("Page que les admins vont accéder pour modifier/ajouter/supprimer des livres <a href=/>Retour</a>")
+    return HttpResponse(
+        "Page que les admins vont accéder pour modifier/ajouter/supprimer des livres <a "
+        "href=/>Retour</a>"
+    )
+
 
 def profile(response):
-    return HttpResponse("Page de profile de l'utilisateur.")
+
+    second_name = "Test"
+    first_name = "Test"
+    adress = "Bois de Boulogne"
+    phone_number = "+1 (514) 514-5140"
+    expiration_date = "23/02/01"
+
+    liste_emprunts = ["emprunt1", "emprunt2", "emprunt3"]
+
+    return render(
+        response,
+        "main/profil.html",
+        {
+            "second_name": second_name,
+            "first_name": first_name,
+            "adress": adress,
+            "phone_number": phone_number,
+            "expiration>_date": expiration_date,
+            "liste_emprunts": liste_emprunts,
+        }
+        | default_dict,
+    )
+
 
 def settings(response):
     return HttpResponse("Page de settings de l'utilisateur.")
 
+
 def panier(response):
-    return HttpResponse("Panier de l'utilisateur.")
+    liste_emprunts = ["livre 1", "livre 2", "livre 3"]
+
+    return render(
+        response, "main/panier.html", {"liste_emprunts": liste_emprunts} | default_dict
+    )
+
 
 def librairie(response, id):
-    return HttpResponse("Page de la librairie -> id: " + str(id))
+    librairie_nom = "Bibliothèque de Montreal"
+    adresse = "rue de montreal"
+    heures_ouverture = "8am à 9pm"
+
+    return render(
+        response,
+        "main/librairie.html",
+        {
+            "librairie_nom": librairie_nom,
+            "adresse": adresse,
+            "heures_ouverture": heures_ouverture,
+        }
+        | default_dict,
+    )
