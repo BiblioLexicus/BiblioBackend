@@ -1,9 +1,8 @@
 import os
-
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
-from .forms import Rechercher
+from .commands import search_home
 
 default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
 organisation_name = os.getenv("ORGANISATION_NAME")
@@ -11,16 +10,25 @@ organisation_name = os.getenv("ORGANISATION_NAME")
 
 def home(response):
     # Page d'acceuil du site web
-    form = Rechercher()
 
-    return render(response, "main/acceuil.html", {"form": form} | default_dict)
+    if search_home(response) != "":
+        recherche = search_home(response)
+        return redirect('/search/'+str(recherche)) #Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
+
+    return render(response, "main/acceuil.html", {} | default_dict)
 
 
 def search(response, name):
-    return HttpResponse(
-        "Page affichant la liste de livres recherchés. <a href=/>Retour</a> </br> Votre Recherche: "
-        + name
-    )
+
+    liste_livres = ['livre 1', 'livre 2', 'livre 3', 'livre 3']
+    out_liste = []
+
+    if name in liste_livres:
+        for out in liste_livres:
+            if out == name:
+                out_liste.append(out)
+    
+    return render(response, "main/search.html", {"name": name, "liste_livres": out_liste} | default_dict)
 
 
 def item(response, id):
@@ -57,10 +65,27 @@ def item(response, id):
 
 
 def administration(response):
-    return HttpResponse(
-        "Page que les admins vont accéder pour modifier/ajouter/supprimer des livres <a "
-        "href=/>Retour</a>"
-    )
+
+    # Vérifie si l'utilisateur est un adminstrateur
+    # Accès à la liste de livre dans une librairie et peut ajouter/supprimer/modifier des livres
+
+    liste_livres = ['livre 1', 'livre 2', 'livre 3', 'livre 3']
+    out_liste = []
+
+
+    if response.method == "GET":
+        if response.GET.get("search"):
+            recherche = response.GET.get("livre")
+
+            if len(recherche) > 2:
+                out_liste.clear()
+                if recherche in liste_livres:
+                    for out in liste_livres:
+                        if out == recherche:
+                            out_liste.append(out)              
+
+
+    return render(response, 'main/administration.html', {"liste_livres": out_liste} | default_dict)
 
 
 def profile(response):
