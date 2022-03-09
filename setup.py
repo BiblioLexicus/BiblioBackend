@@ -34,6 +34,13 @@ def main():
     )
     # Project specific
     parser.add_argument(
+        "--DB_ENGINE",
+        dest="ENGINE",
+        type=str,
+        default="django.db.backends.mysql",
+        help=f"The engine of the databse.{default()}",
+    )
+    parser.add_argument(
         "--DB_NAME",
         type=str,
         default="BiblioLexicusDB",
@@ -194,6 +201,7 @@ def main():
     # Set envs
     log.debug("\nSetting up environment variables...")
     envs = {
+        "ENGINE": "",
         "DB_NAME": "",
         "DB_USER_ADMIN": "",
         "DB_PASSWORD": "",
@@ -207,15 +215,39 @@ def main():
         var = getattr(args, env)
         if not args.AUTO and not args.CI_TEST:
             # Manual input for environment variables
-            question = [
-                {
-                    "type": "input",
-                    "name": "environ",
-                    "message": f"Enter the {env} (Default: {var}):",
-                    "default": str(var),
-                }
-            ]
-            var = prompt(question)["environ"]
+            if not env == "ENGINE":
+                question = [
+                    {
+                        "type": "input",
+                        "name": "environ",
+                        "message": f"Enter the {env} (Default: {var}):",
+                        "default": str(var),
+                    }
+                ]
+                var = prompt(question)["environ"]
+            else:
+                # Engine specific question
+                question = [
+                    {
+                        "type": "list",
+                        "name": "ENGTYP",
+                        "message": "This project was made specifically for SQL engines, more particularly MariaDB. What engine do you want to use?",
+                        "choices": ["MariadB / MySQL engine", "PostgreSQL", "Other"],
+                    },
+                    {
+                        "type": "input",
+                        "name": "ENGTYP_NOSQSL",
+                        "message": "What other backend do you want to use? (Please type the full django backend)",
+                        "when": lambda answers: answers["ENGTYP"] == "Other",
+                    },
+                ]
+                result = prompt(question)
+
+                # For mariadB / MysQL, the engine is already specified
+                if result["ENGTYP"] == "PostgreSQL":
+                    var = "django.db.backends.postgresql_psycopg2"
+                elif result["ENGTYP"] == "Other":
+                    var = result["ENGTYP_NOSQSL"]
 
         envs[env] = var
 
