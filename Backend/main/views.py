@@ -43,7 +43,10 @@ def item(response, id):
         "RA": "Roman Adultes"
     }
     genre_ouvrage = {
-
+        "AA": "Action et Aventure",
+        "RD": "Romance et Drame",
+        "TH": "Thriller et Horreur",
+        "DA": "Documentaires"
     }
     item_name = "Item"
     item_author = "Author"
