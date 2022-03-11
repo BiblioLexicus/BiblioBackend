@@ -299,80 +299,7 @@ def setenv(args, log):
 
 def setup_pages(args, log):
     # Move html files from other repository / folder
-<<<<<<< HEAD
-    if not args.SKIP_PAGES and not args.CI_TEST:
-        # Getting the html mover
-        log.debug("\nGetting the html mover script...")
-        log.debug(
-            f"This script can be obtained at {html_mover_helper}"
-            " for further use in development or other reasons."
-        )
-        mv_helper = bytes.decode(request.urlopen(html_mover_helper).read())
-        log.debug(f"Writing mover file to {mover_helper_file}")
-        with open(mover_helper_file, "w") as f:
-            f.write(mv_helper)
-        log.debug("Write successful!\n")
 
-        if not args.DEFAULT_REP and not args.CUSTOM_REP and not args.LOCAL_REP:
-            # Getting the html source
-            question = [
-                {
-                    "type": "list",
-                    "name": "html_source",
-                    "message": "Where do you want to take the html files from?:",
-                    "choices": [
-                        "Clone the default repository",
-                        "Clone a different repository",
-                        "From a local path",
-                        "skip",
-                    ],
-                }
-            ]
-
-            answer = prompt(question)["html_source"]
-        else:
-            answer = ""
-
-        # Choose source and clone files if needed
-        if answer == "Clone the default repository" or args.DEFAULT_REP:
-            log.debug("\nCloning default repo....")
-            html_repo = default_html_repository
-            os.makedirs(html_repo_path, exist_ok=True)
-            Repo.clone_from(html_repo, html_repo_path)
-            log.debug("Clone successful!")
-        elif answer == "Clone a different repository" or args.CUSTOM_REP:
-            question = [
-                {
-                    "type": "input",
-                    "name": "repo",
-                    "message": "Enter the link of the repo (ending in `.git`):",
-                }
-            ]
-            html_repo = prompt(question)["repo"]
-            log.debug(f"\nCloning repo {html_repo} ...")
-            os.makedirs(html_repo_path, exist_ok=True)
-            Repo.clone_from(html_repo, html_repo_path)
-            log.debug("Cloning successful!")
-        elif answer == "From a local path" or args.LOCAL_REP:
-            question = [
-                {
-                    "type": "input",
-                    "name": "path",
-                    "message": "Enter the path of the folder containing the html files (this path should include a "
-                    "folder "
-                    "called `html`):",
-                    "validate": lambda val: os.path.exists(val),
-                }
-            ]
-            html_repo_path = prompt(question)["path"]
-            log.debug(f"\nHTML repo set to {html_repo_path} !")
-
-        html_repo_path += "html/"  # Mover script
-        command = (
-            f"python {mover_helper_file} --project_path {project_path} --project_name {project_name} "
-            f"--operation {operation} --local {html_repo_path} --no_confirm"
-        )
-=======
     if args.SKIP_PAGES or args.CI_TEST:
         return  # Skip pages
 
@@ -386,7 +313,6 @@ def setup_pages(args, log):
         "https://github.com/BiblioLexicus/BiblioFront.git"  # Private repository for now
     )
     html_repo_path = "./Frontend/"
->>>>>>> 6f5895429cc9bc3c454d18ed4d137e8b8888b4fa
 
     log.info("")  # Adds a empty line
 
