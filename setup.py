@@ -280,6 +280,7 @@ def main():
                         "Clone the default repository",
                         "Clone a different repository",
                         "From a local path",
+                        "skip",
                     ],
                 }
             ]
