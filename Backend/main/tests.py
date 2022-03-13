@@ -99,6 +99,15 @@ class TestUsers(TestCase):
         5. Verify if the user is logged in
         6. Try to make a user action (reserve a work)
         7. Try to log out
+
+        Normal user:
+        8. test if restricted (admin and employee actions) are unavailable
+
+        Employee user:
+        8. verify specific restricted actions are authorised and/or blocked
+
+        Admin user:
+        8. Verify if can run restricted actions and normal actions 
         """
 
     def test_user_promoting(self):
@@ -113,7 +122,7 @@ class TestUsers(TestCase):
     def test_user_check_work(self):
         """
         Test user access to different works. (Work can be in a 'staging' area where they are not accessible)
-
+        note: define staging area and its properties
         Steps (For every access right):
         1. Access a work that is public
         2. Access "restricted" work
@@ -132,6 +141,22 @@ class TestUsers(TestCase):
         2. Check out the recommended works (should of given types)
         :return:
         """
+    
+    def test_user_deletion(self):
+        """
+        test what happens if we delete a user and the result to it's corresponding items
+        
+        1. Create a normal user
+        2. Create comments to a random book
+        3. Delete User
+        4. Check state of the comment
+        
+        5. Create admin account
+        6. Create library under admin supervisation
+        7. delete admin account
+        8. Check state of library (in accordance to the use case predefined)
+            8.1 Might raise the test of what happens if we delete a library
+        """
 
 
 class TestLibrary(TestCase):
@@ -140,9 +165,11 @@ class TestLibrary(TestCase):
         Test Library creation, deletion and modification
 
         Steps:
+        0. Create admin account who will supervise library
         1. Create library
         2. Modify library
         3. Delete library
+        4. Check if linked books are somewhere in the db (should be handled by the SQL but not sure)
 
         Test some with incorrect data and verify that the library will not be changed and will throw a warning as a result.
         """
@@ -181,7 +208,8 @@ class TestComment(TestCase):
         Steps:
         1. Add a normal comment
         2. Add a comment with bad words (Should not be accepted)
-        3. Add a comment with html tags / script (Should not be accepted)
+            2.1 Define bad word. 
+        3. Add a comment with html tags / script (Should not be accepted) or should be cleaned
         """
 
     def test_command_remove(self):
