@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   `Library_Website` VARCHAR(45) NOT NULL,
   `Phone_Address` VARCHAR(14) NOT NULL,
   `Library_Name` VARCHAR(45) NULL,
-  `ID_Library` VARCHAR(2) NOT NULL,
+  `ID_Library` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`ID_Library`),
   INDEX `fk_Donnees_Bibiliotheque_User_List1`
  (`ID_Users` ASC) VISIBLE,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   `Postal_Code` VARCHAR(6) NOT NULL,
   `Expiration_Subscription` DATE NOT NULL,
   `Permissions` VARCHAR(2) NOT NULL DEFAULT '00',
-  `Related_Library_ID` VARCHAR(2),
+  `Related_Library_ID` VARCHAR(2) NOT NULL DEFAULT '00',
   PRIMARY KEY (`ID_Users`),
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
