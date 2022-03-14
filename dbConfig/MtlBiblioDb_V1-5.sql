@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
   `Price` DECIMAL(5,3) UNSIGNED NOT NULL,
+  `Rating_Value` FLOAT(8) DEFAULT 0, 
   --colonne
   PRIMARY KEY (`ID_Works`),
   UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
