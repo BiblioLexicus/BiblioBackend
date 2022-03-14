@@ -293,6 +293,14 @@ optional = false
 python-versions = ">=2"
 
 [[package]]
+name = "urljoin"
+version = "1.0.0"
+description = "join URL paths"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "virtualenv"
 version = "20.13.0"
 description = "Virtual Python Environment builder"
@@ -313,7 +321,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "682a5777aa25b43d4cf1443713fd9e9c123361e97b45ca28668e368b64769657"
+content-hash = "b5a820b4bdcec9f4c103303eb48f043e66fb7c191ba8f94754b50a93187dc5d5"
 
 [metadata.files]
 asgiref = [
@@ -486,6 +494,10 @@ typing-extensions = [
 tzdata = [
     {file = "tzdata-2021.5-py2.py3-none-any.whl", hash = "sha256:3eee491e22ebfe1e5cfcc97a4137cd70f092ce59144d81f8924a844de05ba8f5"},
     {file = "tzdata-2021.5.tar.gz", hash = "sha256:68dbe41afd01b867894bbdfd54fa03f468cfa4f0086bfb4adcd8de8f24f3ee21"},
+]
+urljoin = [
+    {file = "urljoin-1.0.0-py2.py3-none-any.whl", hash = "sha256:8e3c40ba7df1b4630c8ef9c1320b94d7c6d7c6e0c67ddf5cc1435f26dbd1afe5"},
+    {file = "urljoin-1.0.0.tar.gz", hash = "sha256:6dc7132766bd3ab705bc21a9590c6bd3cc6d13ac3df21d3ee68609e6476aa2ae"},
 ]
 virtualenv = [
     {file = "virtualenv-20.13.0-py2.py3-none-any.whl", hash = "sha256:339f16c4a86b44240ba7223d0f93a7887c3ca04b5f9c8129da7958447d079b09"},
