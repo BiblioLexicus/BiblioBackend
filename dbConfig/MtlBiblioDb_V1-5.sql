@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `Copy_Number` INT UNSIGNED NOT NULL,
   `Type_Work` VARCHAR(2) NOT NULL,
   `Price` DECIMAL(5,3) UNSIGNED NOT NULL,
+  --colonne
   PRIMARY KEY (`ID_Works`),
   UNIQUE INDEX `idWorks_UNIQUE` (`ID_Works` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -77,6 +78,21 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`Work_Media_List`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
+  `ID_Works` VARCHAR(16) NOT NULL,
+  `Photo_Bin` MEDIUMBLOB DEFAULT ``
+  -- mettre l'image par défault dans les trucs après default. store 16,777,215 bytes
+
+  CONSTRAINT `fk_Media_List_ID_Works`
+    FOREIGN KEY (`ID_Works`)
+    REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
+    ON DELETE NO ACTION, 
+    ON UPDATE CASCADE,
+)
 
 
 -- -----------------------------------------------------
