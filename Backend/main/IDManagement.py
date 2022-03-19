@@ -1,6 +1,9 @@
 import math
 import random
 import sys
+import this
+
+from tomlkit import integer
 
 
 def intToid2Char(valInt):
@@ -59,6 +62,13 @@ def generalIdCreationAndManagement(
 ):
     thisId = ""
     if bookOrUser:
-        thisId = intToid2Char(valInt) + idCategorie + idType + creationIdUnique()
+        thisId = intToid2Char(valInt) + " " + idCategorie + " " + idType + " " + creationIdUnique() + " " + "00"
     else:
-        pass
+        thisId = intToid2Char(valInt) + " " + creationIdUnique + " " + idPermission
+    return thisId
+
+
+def additionOfMultipleSameBooks(idDernierObjet):
+    thisId = idDernierObjet.split()
+    thisId[thisId.lenght - 1] = str("0" + int(thisId[thisId.lenght - 1]) + 1)
+
