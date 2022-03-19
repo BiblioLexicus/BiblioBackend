@@ -102,6 +102,22 @@ def set_args() -> argparse.Namespace:
         default="BiblioLexicus",
         help=f"The name of the organisation.{default()}",
     )
+    parser.add_argument(
+        "--ALLOWEDHOSTS",
+        dest="ALLOWED_HOSTS",
+        type=str,
+        default="",
+        help=f"The allowed(s) host(s) for your library. It should resemble 'your-domain.com'. Leave a dot before "
+        f"your-domain to let it accept requests from www.your-domain.com and subdomains.{default()}",
+    )
+    parser.add_argument(
+        "--LOGLEVEL",
+        dest="LOG_LEVEL",
+        type=str,
+        default="info",
+        help=f"The log level of your application. For development, debug is preferred when info is preferred in "
+        f"deployment. {default()}",
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--deploy",
@@ -216,6 +232,8 @@ def setenv(args, log):
         "DB_HOST": "",
         "DB_PORT": "",
         "ORGANISATION_NAME": "",
+        "ALLOWED_HOSTS": "",
+        "LOG_LEVEL": "",
     }
 
     # Loop and set env variables
