@@ -118,6 +118,15 @@ def set_args() -> argparse.Namespace:
         help=f"The log level of your application. For development, debug is preferred when info is preferred in "
         f"deployment. {default()}",
     )
+    parser.add_argument(
+        "--STATICROOT",
+        dest="STATIC_ROOT",
+        type=str,
+        default="/var/www/your-domain/static/",
+        help=f"The root of your static files. This is not needed for local development, but HEAVILY encouraged for a "
+        f"deployment. This default is for a linux installation and you should replace 'your-domain' by your "
+        f"domain. {default()}",
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--deploy",
@@ -234,6 +243,7 @@ def setenv(args, log):
         "ORGANISATION_NAME": "",
         "ALLOWED_HOSTS": "",
         "LOG_LEVEL": "",
+        "STATIC_ROOT": "",
     }
 
     # Loop and set env variables
