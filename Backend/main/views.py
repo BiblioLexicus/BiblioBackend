@@ -1,6 +1,5 @@
 import os
 
-import urljoin
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
