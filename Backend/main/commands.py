@@ -41,3 +41,8 @@ def administration_search(response, query):
 # Fonction pour la page de recherche avance qui va permettre a l'utilisateur d'avoir un resultat plus precis.
 def recherche_avance():
     pass
+# Fonction pour créer un livre
+"""
+def create_book():
+    try:
+"""
