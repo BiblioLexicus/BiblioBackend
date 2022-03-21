@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   `Postal_Code` VARCHAR(6) NOT NULL,
   `Expiration_Subscription` DATE NOT NULL,
   `Permissions` VARCHAR(2) NOT NULL DEFAULT '00',
-  `Related_Library_ID` VARCHAR(2) NOT NULL DEFAULT '00',
+  `Related_Library_ID` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID_Users`),
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
   UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
