@@ -24,7 +24,7 @@ def home(response):
 
 def search(response, name):
 
-    if search_home(response) != "":
+    if len(search_home(response)) > 3 :
         recherche = search_home(response)
         print(recherche)
         return redirect("/search/" + str(recherche))
@@ -70,9 +70,7 @@ def administration(response):
             out = administration_search(response, recherche)
 
     print(out)
-    return render(
-        response, "main/administration.html", {"liste_livres": out} | default_dict
-    )
+    return render(response, "main/administration.html", {"liste_livres": out} | default_dict)
 
 
 def profile(response):

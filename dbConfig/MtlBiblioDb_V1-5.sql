@@ -36,26 +36,6 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`Libraries_Data`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
-  `ID_Users` VARCHAR(16) NOT NULL,
-  `Schedules` VARCHAR(11) NOT NULL,
-  `Postal_Code` VARCHAR(6) NOT NULL,
-  `Library_Website` VARCHAR(45) NOT NULL,
-  `Phone_Address` VARCHAR(14) NOT NULL,
-  `Library_Name` VARCHAR(45) NULL,
-  `ID_Library` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`ID_Library`),
-  INDEX `fk_Donnees_Bibiliotheque_User_List1`
- (`ID_Users` ASC) VISIBLE,
-CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
-    FOREIGN KEY (`ID_Users`)
-    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -78,6 +58,27 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`Libraries_Data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
+  `ID_Users` VARCHAR(16) NOT NULL,
+  `Schedules` VARCHAR(11) NOT NULL,
+  `Postal_Code` VARCHAR(6) NOT NULL,
+  `Library_Website` VARCHAR(45) NOT NULL,
+  `Phone_Address` VARCHAR(14) NOT NULL,
+  `Library_Name` VARCHAR(45) NULL,
+  `ID_Library` INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`ID_Library`),
+  INDEX `fk_Donnees_Bibiliotheque_User_List1`
+ (`ID_Users` ASC) VISIBLE,
+CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
+    FOREIGN KEY (`ID_Users`)
+    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`Loaned_Works`
