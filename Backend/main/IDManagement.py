@@ -1,10 +1,6 @@
 import math
 import random
 import sys
-import this
-
-from tomlkit import integer
-
 
 def intToid2Char(valInt):
     convertionTab = {

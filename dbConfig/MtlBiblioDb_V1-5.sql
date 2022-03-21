@@ -128,6 +128,20 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Comments` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`Work_Media_List`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
+  `ID_Works` VARCHAR(16) NOT NULL,
+  `Photo_Path` VARCHAR(MAX) DEFAULT `WorkImage/defaultWork` --todo: Arpad, change ça dès que tu as les fichiers correspondants
+
+  CONSTRAINT `fk_Media_List_ID_Works`
+    FOREIGN KEY (`ID_Works`)
+    REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
+    ON DELETE NO ACTION,
+    ON UPDATE CASCADE,
+)
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

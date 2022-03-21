@@ -71,7 +71,7 @@ class LoanedWorks(models.Model):
     id_users = models.ForeignKey(
         "UserList", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
-    work_lost = models.TextField(
+    work_lost = models.BinaryField(
         db_column="Work_Lost"
     )  # Field name made lowercase. This field type is a guess.
 
