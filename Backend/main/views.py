@@ -65,7 +65,7 @@ def administration(response):
     out = ""
 
     if response.method == "GET":
-        if response.GET.get("search"):
+        if response.GET.get("searchAdmin"):
             recherche = response.GET.get("livre")
             out = administration_search(response, recherche)
 
