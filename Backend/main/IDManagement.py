@@ -44,7 +44,7 @@ def intToid2Char(valInt):
 
 
 def creationIdUnique():
-    return math.pow(2, 32) * random.random()
+    return math.floor((math.pow(2, 32) * random.random())) # return un int avec math.floor()
 
 
 # de la base 32 à l'int
@@ -58,10 +58,10 @@ def generalIdCreationAndManagement(
 ):
     thisId = ""
     if bookOrUser:
-        thisId = intToid2Char(valInt) + " " + idCategorie + " " + idType + " " + creationIdUnique() + " " + "00"
+        thisId = str(intToid2Char(valInt)) + " " + str(idCategorie) + " " + str(idType) + " " + str(hex(creationIdUnique())[2:]) + " " + "00"
     else:
-        thisId = intToid2Char(valInt) + " " + creationIdUnique + " " + idPermission
-    return thisId
+        thisId = str(intToid2Char(valInt)) + " " + str(hex(creationIdUnique())[2:]) + " " + str(idPermission)
+    return thisId #retourne un string
 
 
 def additionOfMultipleSameBooks(idDernierObjet):

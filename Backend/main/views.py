@@ -59,7 +59,6 @@ def item(response, id):
 def administration(response):
     if search_home(response) != "":
         recherche = search_home(response)
-        print(recherche)
         return redirect("/search/" + str(recherche))
 
     out = ""
@@ -69,7 +68,10 @@ def administration(response):
             recherche = response.GET.get("livre")
             out = administration_search(response, recherche)
 
-    print(out)
+    if response.method == "POST": #Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+        if response.POST.get("create"):
+            create_book(response)
+
     return render(response, "main/administration.html", {"liste_livres": out} | default_dict)
 
 
