@@ -14,7 +14,8 @@ pre-commit = "^2.17.0"
 python-dotenv = "^0.19.2"
 mysqlclient = "^2.1.0"
 django-crispy-forms = "^1.14.0"
-urljoin = "^1.0.0"
+gunicorn = "^20.1.0"
+django-csp = "^3.7"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
