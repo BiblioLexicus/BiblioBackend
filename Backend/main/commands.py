@@ -47,45 +47,39 @@ def recherche_avance():
     pass
 
 # Fonction pour créer un livre
-def create_book(response):
+def create_book(response, liste_info):
     if response.method == "POST":
-        liste_info = ["nomLivre", "authorName", "datePublication", "editionHouse", 
-                    "nbrPage", "resume", "genre", "language", "etat", "numeroCopie", 
-                    "typeLivre", "price"]
+        #for info in liste_info: #Vérifie que tout les éléments ont une longeur d'au moins 3. 
+         #   if len(response.POST.get(info)) < 3 and info != "price" and info != "numeroCopie" and info != "nbrPage": 
+          #      return "erreur"
 
-        for info in liste_info: #Vérifie que tout les éléments ont une longeur d'au moins 3. 
-            if len(response.POST.get(info)) < 3 and info != "price" and info != "numeroCopie" and info != "nbrPage": 
-                return "erreur"
-
-
-        # Assigne les valeurs entrées aux variables
         nom_livre = response.POST.get("nomLivre")
         author_name = response.POST.get("authorName")
         date_publication = response.POST.get("datePublication")
         edition_house = response.POST.get("editionHouse")
         nombre_page = response.POST.get("nbrPage")
-        resume = response.POST.get("resume")
-        genre = response.POST.get("genre")
-        language = response.POST.get("language")
-        etat = response.POST.get("etat")
+        resume = response.POST.get("resume") 
+        genre = response.POST["dropdown_genre"]
+        language = response.POST.get("language") 
+        etat = response.POST["dropdown_etat"] 
         numero_copie = response.POST.get("numeroCopie")
-        type_livre = response.POST.get("typeLivre")
+        type_livre = response.POST['dropdown_type']
         price = response.POST.get("price")
 
+        # modification de la date de publication:
+        date_publication_list = date_publication.split('-')
+        date_publication = datetime.date(int(date_publication_list[0]), int(date_publication_list[1]), int(date_publication_list[2]))
 
-        if etat == "Bon": 
-            etat = 1
-        else: 
-            etat = 0
+
             
         #Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec les bandes déroulantes)
-        val_id = str(generalIdCreationAndManagement(10, True, PermissionEnums.AA, WorkCategoryEnums("Anime et Manga").name, WorkTypeEnum("Action et Aventure").name))  # ID par défaut pour tester... 
+        val_id = str(generalIdCreationAndManagement(10, True, PermissionEnums.AA, genre, type_livre))  # ID par défaut pour tester... 
 
         #Création de l'objet
         livre = WorkList(id_works=val_id,                               name_works=str(nom_livre),          author_name=str(author_name), 
-                        publication_date=datetime.date(2018, 10, 11),   edition_house=str(edition_house), 
-                        length=int(nombre_page),                   resume=str(resume),                 genre=str(WorkCategoryEnums(genre).name), 
+                        publication_date=date_publication,      edition_house=str(edition_house), 
+                        length=int(nombre_page),                   resume=str(resume),                      genre=str(genre), 
                         language=str(language),                         state=int(etat),                    copy_number=int(numero_copie), 
-                        type_work=str(WorkTypeEnum(type_livre).name),   price=decimal.Decimal(price))
+                        type_work=str(type_livre),   price=decimal.Decimal(price))
 
         livre.save()  #Enregistrement de l'objet

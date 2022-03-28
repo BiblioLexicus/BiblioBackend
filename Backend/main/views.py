@@ -57,6 +57,11 @@ def item(response, id):
 
 
 def administration(response):
+    liste_info = ["nomLivre", "authorName", "datePublication", "editionHouse", 
+                    "nbrPage", "resume", "genre", "language", "etat", "numeroCopie", 
+                    "typeLivre", "price"]
+
+
     if search_home(response) != "":
         recherche = search_home(response)
         return redirect("/search/" + str(recherche))
@@ -70,7 +75,7 @@ def administration(response):
 
     if response.method == "POST": #Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
-            create_book(response)
+            create_book(response, liste_info)
 
     return render(response, "main/administration.html", {"liste_livres": out} | default_dict)
 
