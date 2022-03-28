@@ -8,13 +8,13 @@ load_dotenv()
 # Django WSGI application path in pattern MODULE_NAME:VARIABLE_NAME
 wsgi_app = "Backend.wsgi:application"
 # The granularity of Error log outputs
-loglevel = "debug" if os.getenv("DEBUG") == "True" else "info"
+loglevel = "debug"
 # The number of worker processes for handling requests
 workers = 2
 # The socket to bind
 bind = "127.0.0.1:8000"
 # Restart workers when code changes (development only!)
-reload = True if os.getenv("DEBUG") == "True" else False
+reload = True
 # Write access and error info to /var/log
 accesslog = errorlog = "/var/log/gunicorn/dev.log"
 # Redirect stdout/stderr to log file
