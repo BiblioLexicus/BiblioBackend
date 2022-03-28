@@ -1,5 +1,3 @@
-from django.test import TestCase
-
 # Create your tests here.
 import datetime
 
@@ -11,7 +9,6 @@ from .models import *
 # Create your tests here.
 class TestWorks(TestCase):
     library = LibrariesData(
-
         schedules="",
         postal_code="",
         library_website="",
@@ -31,7 +28,7 @@ class TestWorks(TestCase):
         type_work="qq",
         price=12.1,
     )
-    user = UserList(
+    user = LibraryUser(
         password_hash="",
         name="User",
         first_name="1",

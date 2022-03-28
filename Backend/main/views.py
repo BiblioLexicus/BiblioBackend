@@ -23,8 +23,7 @@ def home(response):
 
 
 def search(response, name):
-
-    if len(search_home(response)) > 3 :
+    if len(search_home(response)) > 3:
         recherche = search_home(response)
         print(recherche)
         return redirect("/search/" + str(recherche))
@@ -39,7 +38,6 @@ def search(response, name):
 
 
 def item(response, id):
-
     if search_home(response) != "":
         recherche = search_home(response)
         return redirect(
@@ -57,10 +55,20 @@ def item(response, id):
 
 
 def administration(response):
-    liste_info = ["nomLivre", "authorName", "datePublication", "editionHouse", 
-                    "nbrPage", "resume", "genre", "language", "etat", "numeroCopie", 
-                    "typeLivre", "price"]
-
+    liste_info = [
+        "nomLivre",
+        "authorName",
+        "datePublication",
+        "editionHouse",
+        "nbrPage",
+        "resume",
+        "genre",
+        "language",
+        "etat",
+        "numeroCopie",
+        "typeLivre",
+        "price",
+    ]
 
     if search_home(response) != "":
         recherche = search_home(response)
@@ -73,11 +81,15 @@ def administration(response):
             recherche = response.GET.get("livre")
             out = administration_search(response, recherche)
 
-    if response.method == "POST": #Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+    if (
+        response.method == "POST"
+    ):  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
             create_book(response, liste_info)
 
-    return render(response, "main/administration.html", {"liste_livres": out} | default_dict)
+    return render(
+        response, "main/administration.html", {"liste_livres": out} | default_dict
+    )
 
 
 def profile(response):
@@ -110,16 +122,6 @@ def profile(response):
     )
 
 
-def settings(response):
-    if search_home(response) != "":
-        recherche = search_home(response)
-        print(recherche)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
-    return HttpResponse("Page de settings de l'utilisateur.")
-
-
 def panier(response):
     if search_home(response) != "":
         recherche = search_home(response)
@@ -136,7 +138,6 @@ def panier(response):
 
 
 def librairie(response, id):
-
     if search_home(response) != "":
         recherche = search_home(response)
         print(recherche)
@@ -157,4 +158,19 @@ def librairie(response, id):
             "heures_ouverture": heures_ouverture,
         }
         | default_dict,
+    )
+
+
+def settings(response):
+    user = {
+        "name": "Jean-jacques",
+        "email": "jean@jacques.a",
+        "postalCode": "AAA334",
+        "imagelink": "https://2.bp.blogspot.com/-1YJ7dRHZtjw/WnVXaOWaV6I/AAAAAAAADVA/yAp3k9lq1AkiofEc8V5Xh8xS-0i9GFQWACLcBGAs/s1600/Screenshot_8.jpg",
+    }
+    lst_genre = [genre.value for genre in WorkTypeEnum]
+    return render(
+        response,
+        "main/usersettings.html",
+        {"user": user, "lst_genre": lst_genre} | default_dict,
     )

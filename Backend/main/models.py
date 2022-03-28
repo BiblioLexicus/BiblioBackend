@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.auth.models import User
 from django.db import models
 
 # TODO check that all classes are well generated - will do after that it has been merged to Dev
@@ -18,7 +19,7 @@ class Comments(models.Model):
         "WorkList", models.DO_NOTHING, db_column="ID_Works"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        "LibraryUser", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
     release_date = models.DateTimeField(
         db_column="Release_Date"
@@ -34,8 +35,9 @@ class Comments(models.Model):
 
 
 class LibrariesData(models.Model):
+    # foreign key, id de l'user qui a  créé la librairie
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        "LibraryUser", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
     schedules = models.CharField(
         db_column="Schedules", max_length=11
@@ -69,7 +71,7 @@ class LoanedWorks(models.Model):
         db_column="End_Loan_Date"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        "LibraryUser", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
     work_lost = models.BinaryField(
         db_column="Work_Lost"
@@ -81,7 +83,7 @@ class LoanedWorks(models.Model):
         unique_together = (("id_works", "id_users"),)
 
 
-class UserList(models.Model):
+class LibraryUser(User):
     id_users = models.CharField(
         db_column="ID_Users", primary_key=True, max_length=16
     )  # Field name made lowercase.
@@ -91,25 +93,25 @@ class UserList(models.Model):
     name = models.CharField(
         db_column="Name", max_length=50
     )  # Field name made lowercase.
-    first_name = models.CharField(
+    """first_name = models.CharField(
         db_column="First_Name", max_length=100
-    )  # Field name made lowercase.
+    )  # Field name made lowercase."""
     date_birth = models.DateField(db_column="Date_Birth")  # Field name made lowercase.
     fees = models.DecimalField(
         db_column="Fees", max_digits=10, decimal_places=0
     )  # Field name made lowercase.
-    email = models.CharField(
+    """email = models.CharField(
         db_column="Email", unique=True, max_length=320
-    )  # Field name made lowercase.
+    )  # Field name made lowercase."""
     addresse_postale = models.CharField(
         db_column="Addresse_Postale", max_length=6
     )  # Field name made lowercase.
     expiration_subscription = models.DateField(
         db_column="Expiration_Subscription"
     )  # Field name made lowercase.
-    permissions = models.CharField(
+    """permissions = models.CharField(
         db_column="Permissions", max_length=2
-    )  # Field name made lowercase.
+    )  # Field name made lowercase."""
     related_library_id = models.CharField(
         db_column="Related_Library_ID", max_length=2, blank=True, null=True
     )  # Field name made lowercase.

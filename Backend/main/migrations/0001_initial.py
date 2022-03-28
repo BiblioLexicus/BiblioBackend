@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="UserList",
+            name="LibraryUser",
             fields=[
                 (
                     "id_users",
