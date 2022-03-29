@@ -70,6 +70,8 @@ def administration(response):
         "price",
     ]
 
+    creation = None
+
     if search_home(response) != "":
         recherche = search_home(response)
         return redirect("/search/" + str(recherche))
@@ -81,14 +83,12 @@ def administration(response):
             recherche = response.GET.get("livre")
             out = administration_search(response, recherche)
 
-    if (
-        response.method == "POST"
-    ):  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+    if response.method == "POST":  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
-            create_book(response, liste_info)
+            creation = create_book(response, liste_info) #Creation est un boolean: (True si le livre est créé) (False si le livre n'est pas créé)
 
     return render(
-        response, "main/administration.html", {"liste_livres": out} | default_dict
+        response, "main/administration.html", {"liste_livres": out, "creation": creation} | default_dict
     )
 
 
