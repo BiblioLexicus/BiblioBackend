@@ -104,3 +104,9 @@ def create_book(response, liste_info):
             return True #Retourne True si il le livre est créé. 
         except:
             return False #Retroune False si le livre n'est pas créé. 
+
+
+def supprimer_livre(response):
+    id_delete = response.POST.get("id_work") #Id du livre à delete
+    WorkList.objects.filter(id_works=str(id_delete)).delete() #Delete le livre
+            
