@@ -26,7 +26,7 @@ class Comments(models.Model):
         "WorkList", models.DO_NOTHING, db_column="ID_Works"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        User, models.DO_NOTHING, db_column="id"
     )  # Field name made lowercase.
     release_date = models.DateTimeField(
         db_column="Release_Date"
@@ -43,7 +43,7 @@ class Comments(models.Model):
 
 class LibrariesData(models.Model):
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        User, models.DO_NOTHING, db_column="id"
     )  # Field name made lowercase.
     schedules = models.CharField(
         db_column="Schedules", max_length=11
@@ -77,7 +77,7 @@ class LoanedWorks(models.Model):
         db_column="End_Loan_Date"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        "UserList", models.DO_NOTHING, db_column="ID_Users"
+        User, models.DO_NOTHING, db_column="id"
     )  # Field name made lowercase.
     #binary ou boolean? question avec arpad voir ce qui se passe
     work_lost = models.BinaryField(
