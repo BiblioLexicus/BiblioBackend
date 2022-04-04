@@ -64,11 +64,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Schedules` VARCHAR(11) NOT NULL,
+  `Schedules` VARCHAR(11) NOT NULL, --todo: définir si 11 caractères c assez pour schedules
   `Postal_Code` VARCHAR(6) NOT NULL,
-  `Library_Website` VARCHAR(45) NOT NULL,
+  `Library_Website` VARCHAR(200) NOT NULL, -- prblm plus long c mieux
   `Phone_Address` VARCHAR(14) NOT NULL,
-  `Library_Name` VARCHAR(45) NULL,
+  `Library_Name` VARCHAR(45) NOT NULL,
   `ID_Library` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`ID_Library`),
   INDEX `fk_Donnees_Bibiliotheque_User_List1`

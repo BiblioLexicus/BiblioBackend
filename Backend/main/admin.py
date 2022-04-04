@@ -6,6 +6,6 @@ from .models import *
 admin.site.register(Comments)
 admin.site.register(LibrariesData)
 admin.site.register(LoanedWorks)
-admin.site.register(LibraryUser)
+admin.site.register(LibraryUserProfile)
 admin.site.register(WorkList)
 # TODO: si il y a des modifications de la db (nouveaux tableaux), ajouter ici et importer

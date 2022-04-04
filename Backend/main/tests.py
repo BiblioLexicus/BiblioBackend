@@ -1,3 +1,5 @@
+from django.test import TestCase
+
 # Create your tests here.
 import datetime
 
@@ -28,7 +30,9 @@ class TestWorks(TestCase):
         type_work="qq",
         price=12.1,
     )
-    user = LibraryUser(
+    # User is a WIP, I'll comment it until further notices
+    """
+    user = LibraryUserProfile(
         password_hash="",
         name="User",
         first_name="1",
@@ -40,10 +44,61 @@ class TestWorks(TestCase):
         permissions="",
         related_library_id="",
     )
+    """
 
     user.save
     work.save
     library.save
+
+    """    
+    try:
+        library = LibrariesData(
+
+            schedules="foo",
+            postal_code="S0SS0S",
+            library_website="foo.org",
+            phone_address="5149119911",
+            library_name="Library 1",
+        )
+
+        library.save()
+
+
+
+        work = WorkList(
+            name_works="Work 1",
+            author_name="Author 1",
+            publication_date=datetime.date.today().strftime("%Y-%m-%d"),
+            edition_house="",
+            length=120,
+            resume="A short description of the work",
+            genre="aa",
+            state="",
+            copy_number=1,
+            type_work="qq",
+            price=12.1,
+        )
+        work.save()
+        user = UserList(
+            password_hash="",
+            name="User",
+            first_name="1",
+            date_birth=datetime.date.today(),
+            fees=0,
+            email="user@one.com",
+            adresse_postale="",
+            expiration_subscription=datetime.date.today() + datetime.timedelta(days=30),
+            permissions="",
+            related_library_id="",
+        )
+        user.save()
+    except:
+        traceback.print_exc()
+    else:
+        del library
+        del work
+        del user
+    """
 
     def test_work_modification(self):
         """

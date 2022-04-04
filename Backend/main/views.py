@@ -1,9 +1,13 @@
 import os
 
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from .commands import *
+from .forms import UserForm, BaseProfileForm
 
 default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
 organisation_name = os.getenv("ORGANISATION_NAME")
@@ -76,7 +80,6 @@ def administration(response):
         recherche = search_home(response)
         return redirect("/search/" + str(recherche))
 
-
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
             recherche = response.GET.get("livre")
@@ -84,8 +87,9 @@ def administration(response):
 
     if response.method == "POST":  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
-            creation = create_book(response, liste_info) #Creation est un boolean: (True si le livre est créé) (False si le livre n'est pas créé)
-        if response.POST.get("Supprimer"): 
+            creation = create_book(response,
+                                   liste_info)  # Creation est un boolean: (True si le livre est créé) (False si le livre n'est pas créé)
+        if response.POST.get("Supprimer"):
             supprimer_livre(response)
 
     return render(
@@ -175,3 +179,49 @@ def settings(response):
         "main/usersettings.html",
         {"user": user, "lst_genre": lst_genre} | default_dict,
     )
+
+
+def register(response):
+    def update_profile(request):
+        if request.method == 'POST':
+            user_form = UserForm(request.POST, instance=request.user)
+            profile_form = BaseProfileForm(request.POST, instance=request.user.profile)
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                print("success")
+                return redirect('settings:profile')
+            else:
+                print("error")
+        else:
+            user_form = UserForm(instance=request.user)
+            profile_form = BaseProfileForm(instance=request.user.profile)
+        return render(request, 'register/registration/register.html', {
+            'user_form': user_form,
+            'profile_form': profile_form
+        })
+
+
+# trouvé sur le web
+# (https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone).
+# à voir si ça marche.
+@login_required
+@transaction.atomic
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = BaseProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            print("success")
+            return redirect('settings:profile')
+        else:
+            print("error")
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = BaseProfileForm(instance=request.user.profile)
+    return render(request, 'main/baseUserRegistration.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
