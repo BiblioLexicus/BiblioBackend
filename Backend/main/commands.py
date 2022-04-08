@@ -62,67 +62,63 @@ def create_book(response, liste_info):
             ):
                 return False  # Si il y a une erreur retourne False
 
-        print(response.POST["dropdown_genre"])
 
-        for txt in liste_info:
-            print(txt + ": " + str(response.POST.get(txt)))
+        try:
+            nom_livre = response.POST.get("nomLivre")
+            author_name = response.POST.get("authorName")
+            date_publication = response.POST.get("datePublication")
+            edition_house = response.POST.get("editionHouse")
+            nombre_page = response.POST.get("nbrPage")
+            resume = response.POST.get("resume")
+            genre = response.POST["dropdown_genre"]
+            language = response.POST.get("language")
 
-        """try:"""
-        nom_livre = response.POST.get("nomLivre")
-        author_name = response.POST.get("authorName")
-        date_publication = response.POST.get("datePublication")
-        edition_house = response.POST.get("editionHouse")
-        nombre_page = response.POST.get("nbrPage")
-        resume = response.POST.get("resume")
-        genre = response.POST["dropdown_genre"]
-        language = response.POST.get("language")
+            etat = response.POST["dropdown_etat"]
 
-        etat = response.POST["dropdown_etat"]
+            numero_copie = response.POST.get("numeroCopie")
+            type_livre = response.POST["dropdown_type"]
+            price = response.POST.get("price")
 
-        numero_copie = response.POST.get("numeroCopie")
-        type_livre = response.POST["dropdown_type"]
-        price = response.POST.get("price")
-
-        # modification de la date de publication:
-        date_publication_list = date_publication.split("-")
-        date_publication = datetime.date(
-            int(date_publication_list[0]),
-            int(date_publication_list[1]),
-            int(date_publication_list[2]),
-        )
-
-        # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec les
-        # bandes déroulantes)
-
-        val_id = str(
-            generalIdCreationAndManagement(
-                10, True, PermissionEnums.AA, genre, type_livre
+            # modification de la date de publication:
+            date_publication_list = date_publication.split("-")
+            date_publication = datetime.date(
+                int(date_publication_list[0]),
+                int(date_publication_list[1]),
+                int(date_publication_list[2]),
             )
-        )
-        print("val id:" + val_id)
 
-        # Création de l'objet
-        livre = WorkList(
-            id_works=val_id,
-            name_works=str(nom_livre),
-            author_name=str(author_name),
-            publication_date=date_publication,
-            edition_house=str(edition_house),
-            length=int(nombre_page),
-            resume=str(resume),
-            genre=str(genre),
-            language=str(language),
-            state=int(etat),
-            copy_number=int(numero_copie),
-            type_work=str(type_livre),
-            price=decimal.Decimal(price),
-        )
-        livre.save()  # Enregistrement de l'objet
-        print("livre créé")
-        return True  # Retourne True si il le livre est créé.
-    """except:
-    print('erreur')
-    return False  # Retroune False si le livre n'est pas créé."""
+            # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec les
+            # bandes déroulantes)
+
+            val_id = str(
+                generalIdCreationAndManagement(
+                    10, True, PermissionEnums.AA, genre, type_livre
+                )
+            )
+            print("val id:" + val_id)
+
+            # Création de l'objet
+            livre = WorkList(
+                id_works=val_id,
+                name_works=str(nom_livre),
+                author_name=str(author_name),
+                publication_date=date_publication,
+                edition_house=str(edition_house),
+                length=int(nombre_page),
+                resume=str(resume),
+                genre=str(genre),
+                language=str(language),
+                state=int(etat),
+                copy_number=int(numero_copie),
+                type_work=str(type_livre),
+                price=decimal.Decimal(price),
+            )
+            livre.save()  # Enregistrement de l'objet
+            print("livre créé")
+            return True  # Retourne True si il le livre est créé.
+        except:
+            print('erreur')
+            return False  # Retroune False si le livre n'est pas créé."""
 
 
 def search_book_by_id(response):
@@ -135,6 +131,6 @@ def supprimer_livre(response):
 
 
 def edit_book_admin(response, liste_info):
-    WorkList.objects.filter(id_works=str(response.POST.get("id_edit"))).delete()
-    print(response.POST["dropdown_genre"])
+    print(response.POST.get("id_edit_livre"))
+    WorkList.objects.filter(id_works=str(response.POST.get("id_edit_livre"))).delete()
     create_book(response, liste_info)

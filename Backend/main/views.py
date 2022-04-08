@@ -81,7 +81,6 @@ def administration(response):
     etat = ""
     type_edit = ""
     are_we_editing = False
-    livre_id = ""
     etat_id = 0
 
     if search_home(response) != "":
@@ -93,9 +92,7 @@ def administration(response):
             recherche = response.GET.get("livre")
             out = administration_search(response, recherche)
 
-    if (
-        response.method == "POST"
-    ):  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+    if response.method == "POST":  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
             creation = create_book(
                 response, liste_info
@@ -112,11 +109,9 @@ def administration(response):
             )
             type_edit = str(WorkTypeEnum[edit_book.type_work].value)
             are_we_editing = True
-            livre_id = str(edit_book.id_works)
             etat_id = int(1 if int.from_bytes(edit_book.state, "big") == 1 else 0)
 
         if response.POST.get("edit"):
-            print(response.POST["dropdown_genre"])
             edit_book_admin(response, liste_info)
 
     return render(
@@ -131,7 +126,6 @@ def administration(response):
             "etat": etat,
             "type": type_edit,
             "edit_mode": are_we_editing,
-            "id_editing": livre_id,
             "etat_id": etat_id,
         }
         | default_dict,
