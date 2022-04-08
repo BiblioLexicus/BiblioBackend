@@ -147,8 +147,8 @@ class WorkList(models.Model):
     language = models.CharField(
         db_column="Language", max_length=18
     )  # Field name made lowercase.
-    state = models.TextField(
-        db_column="State"
+    state = models.CharField(
+        db_column="State", max_length=2
     )  # Field name made lowercase. This field type is a guess.
     copy_number = models.PositiveIntegerField(
         db_column="Copy_Number"
