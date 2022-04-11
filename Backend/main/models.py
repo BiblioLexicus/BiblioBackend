@@ -102,7 +102,7 @@ class UserList(models.Model):
         db_column="Email", unique=True, max_length=320
     )  # Field name made lowercase.
     addresse_postale = models.CharField(
-        db_column="Addresse_Postale", max_length=6
+        db_column="Postal_Code", max_length=6
     )  # Field name made lowercase.
     expiration_subscription = models.DateField(
         db_column="Expiration_Subscription"

@@ -2,11 +2,9 @@ import os
 
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from .commands import *
-from .forms import BaseProfileForm, UserForm
 from .IDEnums import *
 
 default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
@@ -27,12 +25,13 @@ def home(response):
 
 
 def search(response, name):
+    recherche = ""
     if len(search_home(response)) > 3:
         recherche = search_home(response)
         print(recherche)
         return redirect("/search/" + str(recherche))
 
-    out_liste = search_page_affichage(response, str(name))  # Liste de résultats
+    out_liste = search_page_affichage(recherche)  # Liste de résultats
 
     return render(
         response,
@@ -41,14 +40,14 @@ def search(response, name):
     )
 
 
-def item(response, id):
+def item(response, item_id):
     if search_home(response) != "":
         recherche = search_home(response)
         return redirect(
             "/search/" + str(recherche)
         )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
 
-    info_livre = affichage_item(response, id)  # Item specifique a afficher
+    info_livre = affichage_item(item_id)  # Item specifique à afficher
     info_livre = info_livre[0]
 
     return render(
@@ -90,9 +89,11 @@ def administration(response):
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
             recherche = response.GET.get("livre")
-            out = administration_search(response, recherche)
+            out = administration_search(recherche)
 
-    if response.method == "POST":  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+    if (
+        response.method == "POST"
+    ):  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
             creation = create_book(
                 response, liste_info
@@ -177,7 +178,7 @@ def panier(response):
     )
 
 
-def librairie(response, id):
+def librairie(response, library_id):
     if search_home(response) != "":
         recherche = search_home(response)
         print(recherche)
@@ -206,59 +207,11 @@ def settings(response):
         "name": "Jean-jacques",
         "email": "jean@jacques.a",
         "postalCode": "AAA334",
-        "imagelink": "https://2.bp.blogspot.com/-1YJ7dRHZtjw/WnVXaOWaV6I/AAAAAAAADVA/yAp3k9lq1AkiofEc8V5Xh8xS-0i9GFQWACLcBGAs/s1600/Screenshot_8.jpg",
+        "imagelink": "",
     }
     lst_genre = [genre.value for genre in WorkTypeEnum]
     return render(
         response,
         "main/usersettings.html",
         {"user": user, "lst_genre": lst_genre} | default_dict,
-    )
-
-
-def register(response):
-    def update_profile(request):
-        if request.method == "POST":
-            user_form = UserForm(request.POST, instance=request.user)
-            profile_form = BaseProfileForm(request.POST, instance=request.user.profile)
-            if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
-                profile_form.save()
-                print("success")
-                return redirect("settings:profile")
-            else:
-                print("error")
-        else:
-            user_form = UserForm(instance=request.user)
-            profile_form = BaseProfileForm(instance=request.user.profile)
-        return render(
-            request,
-            "register/registration/register.html",
-            {"user_form": user_form, "profile_form": profile_form},
-        )
-
-
-# trouvé sur le web
-# (https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone).
-# à voir si ça marche.
-@login_required
-@transaction.atomic
-def update_profile(request):
-    if request.method == "POST":
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = BaseProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            print("success")
-            return redirect("settings:profile")
-        else:
-            print("error")
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = BaseProfileForm(instance=request.user.profile)
-    return render(
-        request,
-        "main/baseUserRegistration.html",
-        {"user_form": user_form, "profile_form": profile_form},
     )

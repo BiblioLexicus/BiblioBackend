@@ -1,6 +1,6 @@
 import math
 import random
-import sys
+
 
 def intToid2Char(valInt):
     convertionTab = {
@@ -28,23 +28,25 @@ def intToid2Char(valInt):
         31: "v",
     }
     valInt / 32
-    id = (
+    final_id = (
         str(convertionTab.get(int(valInt / 32)))
         if valInt / 32 >= 10
         else str(int(valInt / 32))
     )
 
-    id += (
+    final_id += (
         str(convertionTab.get(valInt % 32))
         if valInt % 32 > 9
         else str(int(valInt % 32))
     )
     print(valInt % 32)
-    return id
+    return final_id
 
 
 def creationIdUnique():
-    return math.floor((math.pow(2, 32) * random.random())) # return un int avec math.floor()
+    return math.floor(
+        (math.pow(2, 32) * random.random())
+    )  # return un int avec math.floor()
 
 
 # de la base 32 à l'int
@@ -58,13 +60,28 @@ def generalIdCreationAndManagement(
 ):
     thisId = ""
     if bookOrUser:
-        thisId = str(intToid2Char(valInt)) + " " + str(idCategorie) + " " + str(idType) + " " + str(hex(creationIdUnique())[2:]) + " " + "00"
+        thisId = (
+            str(intToid2Char(valInt))
+            + " "
+            + str(idCategorie)
+            + " "
+            + str(idType)
+            + " "
+            + str(hex(creationIdUnique())[2:])
+            + " "
+            + "00"
+        )
     else:
-        thisId = str(intToid2Char(valInt)) + " " + str(hex(creationIdUnique())[2:]) + " " + str(idPermission)
-    return thisId #retourne un string
+        thisId = (
+            str(intToid2Char(valInt))
+            + " "
+            + str(hex(creationIdUnique())[2:])
+            + " "
+            + str(idPermission)
+        )
+    return thisId  # retourne un string
 
 
 def additionOfMultipleSameBooks(idDernierObjet):
     thisId = idDernierObjet.split()
-    thisId[thisId.lenght - 1] = str("0" + int(thisId[thisId.lenght - 1]) + 1)
-
+    thisId[thisId.lenght - 1] = "0" + str(int(thisId[thisId.lenght - 1]) + 1)

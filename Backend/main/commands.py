@@ -1,11 +1,6 @@
 import datetime
 import decimal
-import os
 
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-
-from .forms import Rechercher
 from .IDEnums import *
 from .IDManagement import *
 from .models import *
@@ -21,21 +16,21 @@ def search_home(response):
 
 
 # Fonction pour afficher la liste des recherches sur la page search.html
-def search_page_affichage(response, name):
+def search_page_affichage(name):
     liste_livres = WorkList.objects.all().filter(name_works=name)
 
     return liste_livres
 
 
 # Fonction pour afficher des informations sur un ouvrage précis
-def affichage_item(response, id):
-    livre = WorkList.objects.all().filter(id_works=id)
+def affichage_item(item_id):
+    livre = WorkList.objects.all().filter(id_works=item_id)
 
     return livre
 
 
 # Fonction qui sert a faire la recherche dans la page d'administration
-def administration_search(response, query):
+def administration_search(query):
     # faire en sorte de passer des parametres ex: User: <username>, Ouvrage: <Nom ouvrage>
     recherche = WorkList.objects.all().filter(name_works=query)
 
@@ -62,7 +57,6 @@ def create_book(response, liste_info):
             ):
                 return False  # Si il y a une erreur retourne False
 
-
         try:
             nom_livre = response.POST.get("nomLivre")
             author_name = response.POST.get("authorName")
@@ -87,8 +81,8 @@ def create_book(response, liste_info):
                 int(date_publication_list[2]),
             )
 
-            # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec les
-            # bandes déroulantes)
+            # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec
+            # les bandes déroulantes)
 
             val_id = str(
                 generalIdCreationAndManagement(
@@ -117,7 +111,7 @@ def create_book(response, liste_info):
             print("livre créé")
             return True  # Retourne True si il le livre est créé.
         except:
-            print('erreur')
+            print("erreur")
             return False  # Retroune False si le livre n'est pas créé."""
 
 

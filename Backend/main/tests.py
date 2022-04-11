@@ -1,5 +1,3 @@
-from django.test import TestCase
-
 # Create your tests here.
 import datetime
 
@@ -45,10 +43,9 @@ class TestWorks(TestCase):
         related_library_id="",
     )
     """
-
-    user.save
-    work.save
-    library.save
+    # user.save()
+    work.save()
+    library.save()
 
     """    
     try:
@@ -167,12 +164,12 @@ class TestUsers(TestCase):
         8. verify specific restricted actions are authorised and/or blocked
 
         Admin user:
-        8. Verify if can run restricted actions and normal actions
+        8. Verify if an admin can run restricted actions and normal actions
         """
 
     def test_user_promoting(self):
         """
-        Test user promotion to a different state (Employee, Admin, etc)
+        Test user promotion to a different state (Employee, Admin, etc.)
 
         Steps:
         1. Create base User
@@ -198,7 +195,7 @@ class TestUsers(TestCase):
 
         Steps (For 3 random work types):
         1. Check out 10 work of one type
-        2. Check out the recommended works (should of given types)
+        2. Check out the recommended works (should be of given type)
         :return:
         """
 
@@ -231,7 +228,8 @@ class TestLibrary(TestCase):
         3. Delete library
         4. Check if linked books are somewhere in the db (should be handled by the SQL but not sure)
 
-        Test some with incorrect data and verify that the library will not be changed and will throw a warning as a result.
+        Test some with incorrect data and verify that the library will not be changed and will throw a warning as a
+        result.
         """
 
     def test_library_add_work(self):
@@ -242,7 +240,8 @@ class TestLibrary(TestCase):
         1. Add a work
         2. Remove work
 
-        Test some with incorrect data and verify that the library will not be changed and will throw a warning as a result.
+        Test some with incorrect data and verify that the library will not be changed and will throw a warning as a
+        result.
         """
 
     def test_library_get_top_works(self):

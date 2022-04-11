@@ -36,6 +36,7 @@ class WorkTypeEnum(Enum):
     CR = "Comedie et Romance"
     OO = "Autres"
 
+
 class PermissionEnums(Enum):
     OO = "Utilisateur par defaut"
     A1 = "Membre de la bibliotheque pouvant changer l'etat d'un livre"
@@ -44,7 +45,7 @@ class PermissionEnums(Enum):
     PC = "Particuliers ou Compagnies fournissant les livres et materiels a la bibliotheque"
     TZ = "Technicien du bibliotheque X"
     ZZ = "Administrateur du serveur en general"
-    
-    
-#les ordres de priorités vont dans ce sense (plus petit au plus grand)
-#OO, PC, A1, DD, TZ, AA, ZZ
+
+
+# les ordres de priorités vont dans ce sense (plus petit au plus grand)
+# OO, PC, A1, DD, TZ, AA, ZZ
