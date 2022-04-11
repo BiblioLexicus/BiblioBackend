@@ -156,4 +156,9 @@ CSP_IMG_SRC = [
     "www.w3.org",
     "cdn.cstj.qc.ca",
 ]
-CSP_SCRIPT_SRC = ["'self'", "cdn.jsdelivr.net", "cdnjs.cloudflare.com"]
+CSP_SCRIPT_SRC = [
+    "'self'",
+    "cdn.jsdelivr.net",
+    "cdnjs.cloudflare.com",
+    "'unsafe-inline'",
+]

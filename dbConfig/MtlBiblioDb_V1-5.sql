@@ -64,9 +64,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Schedules` VARCHAR(11) NOT NULL, --todo: définir si 11 caractères c assez pour schedules
+  `Schedules` VARCHAR(11) NOT NULL, 
   `Postal_Code` VARCHAR(6) NOT NULL,
-  `Library_Website` VARCHAR(200) NOT NULL, -- prblm plus long c mieux
+  `Library_Website` VARCHAR(200) NOT NULL, 
   `Phone_Address` VARCHAR(14) NOT NULL,
   `Library_Name` VARCHAR(45) NOT NULL,
   `ID_Library` INT NOT NULL AUTO_INCREMENT,
@@ -134,7 +134,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
   `ID_Works` VARCHAR(20) NOT NULL,
-  `Photo_Path_Work` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` --URL de l'image par defaut si pas d'images associe a l'ouvrage
+  `Photo_Path_Work` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` 
     FOREIGN KEY (`ID_Works`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
     ON DELETE NO ACTION,
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
 )
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Photo_Path_Users` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` --URL de l'image par defaut si pas d'images associe a l'utilisateur
+  `Photo_Path_Users` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` 
   CONSTRAINT `fk_Media_List_ID_Users`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)

@@ -51,9 +51,17 @@ def recherche_avance():
 def create_book(response, liste_info):
     if response.method == "POST":
 
-        for info in liste_info: #Vérifie que tout les éléments ont une longeur d'au moins 3.
-            if len(str(response.POST.get(str(info)))) < 3 and info != "price" and info != "numeroCopie" and info != "nbrPage":
-                return False # Si il y a une erreur retourne False
+        for (
+            info
+        ) in liste_info:  # Vérifie que tout les éléments ont une longeur d'au moins 3.
+            if (
+                len(str(response.POST.get(str(info)))) < 3
+                and info != "price"
+                and info != "numeroCopie"
+                and info != "nbrPage"
+            ):
+                return False  # Si il y a une erreur retourne False
+
 
         try:
             nom_livre = response.POST.get("nomLivre")
@@ -64,7 +72,9 @@ def create_book(response, liste_info):
             resume = response.POST.get("resume")
             genre = response.POST["dropdown_genre"]
             language = response.POST.get("language")
+
             etat = response.POST["dropdown_etat"]
+
             numero_copie = response.POST.get("numeroCopie")
             type_livre = response.POST["dropdown_type"]
             price = response.POST.get("price")
@@ -79,11 +89,14 @@ def create_book(response, liste_info):
 
             # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec les
             # bandes déroulantes)
+
             val_id = str(
                 generalIdCreationAndManagement(
                     10, True, PermissionEnums.AA, genre, type_livre
                 )
             )
+            print("val id:" + val_id)
+
             # Création de l'objet
             livre = WorkList(
                 id_works=val_id,
@@ -101,12 +114,23 @@ def create_book(response, liste_info):
                 price=decimal.Decimal(price),
             )
             livre.save()  # Enregistrement de l'objet
-            return True #Retourne True si il le livre est créé. 
+            print("livre créé")
+            return True  # Retourne True si il le livre est créé.
         except:
-            return False #Retroune False si le livre n'est pas créé. 
+            print('erreur')
+            return False  # Retroune False si le livre n'est pas créé."""
+
+
+def search_book_by_id(response):
+    return WorkList.objects.all().filter(id_works=response.POST.get("id_work"))
 
 
 def supprimer_livre(response):
-    id_delete = response.POST.get("id_work") #Id du livre à delete
-    WorkList.objects.filter(id_works=str(id_delete)).delete() #Delete le livre
-            
+    id_delete = response.POST.get("id_work")  # Id du livre à delete
+    WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
+
+
+def edit_book_admin(response, liste_info):
+    print(response.POST.get("id_edit_livre"))
+    WorkList.objects.filter(id_works=str(response.POST.get("id_edit_livre"))).delete()
+    create_book(response, liste_info)
