@@ -6,16 +6,8 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 
 # TODO check that all classes are well generated - will do after that it has been merged to Dev
-
-# TODO: check que la db a du sens(celle django) avec ce que on veut. Point de discussion: doit-on viser la base de
-# données la plus petite ou quelque chose de cohérent (penser à la taille des fields, ne serait-ce pas mieux de
-# prendre des fields plus grand mais logique, genre 100, 128, 200 ou 256)
 
 
 class Comments(models.Model):
@@ -26,7 +18,7 @@ class Comments(models.Model):
         "WorkList", models.DO_NOTHING, db_column="ID_Works"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        User, models.DO_NOTHING, db_column="id"
+        "UserList", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
     release_date = models.DateTimeField(
         db_column="Release_Date"
@@ -36,14 +28,14 @@ class Comments(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Comments"
         unique_together = (("id_comments", "id_works", "id_users"),)
 
 
 class LibrariesData(models.Model):
     id_users = models.ForeignKey(
-        User, models.DO_NOTHING, db_column="id"
+        "UserList", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
     schedules = models.CharField(
         db_column="Schedules", max_length=11
@@ -65,7 +57,7 @@ class LibrariesData(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Libraries_Data"
 
 
@@ -77,35 +69,38 @@ class LoanedWorks(models.Model):
         db_column="End_Loan_Date"
     )  # Field name made lowercase.
     id_users = models.ForeignKey(
-        User, models.DO_NOTHING, db_column="id"
+        "UserList", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
-    #binary ou boolean? question avec arpad voir ce qui se passe
     work_lost = models.BinaryField(
         db_column="Work_Lost"
     )  # Field name made lowercase. This field type is a guess.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Loaned_Works"
         unique_together = (("id_works", "id_users"),)
 
 
-# extends user class fourni par django, @arpad si tu veux voir ce qui est la dedans vas dans le server, mariadb -u
-# /DB_ADMIN_BL demande a Charles le password (ou autre façon quelconque, trouve le .env si tu peux ;) )
-# use bibliolexicusdb
-# SELECT * FROM AUTH.user
-# note: c case sensitive, so fais attention
-# note: one to one relationship with user, sera plus facile. Réécriture des test nécessaire mais bon.
-class LibraryUserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    # Field name made lowercase.
+class UserList(models.Model):
+    id_users = models.CharField(
+        db_column="ID_Users", primary_key=True, max_length=16
+    )  # Field name made lowercase.
+    password_hash = models.CharField(
+        db_column="Password_Hash", max_length=32
+    )  # Field name made lowercase.
+    name = models.CharField(
+        db_column="Name", max_length=50
+    )  # Field name made lowercase.
+    first_name = models.CharField(
+        db_column="First_Name", max_length=100
+    )  # Field name made lowercase.
     date_birth = models.DateField(db_column="Date_Birth")  # Field name made lowercase.
     fees = models.DecimalField(
-        db_column="Fees", max_digits=10, decimal_places=4, default=0.0)  # Field name made lowercase.
-    """email = models.CharField(
+        db_column="Fees", max_digits=10, decimal_places=0
+    )  # Field name made lowercase.
+    email = models.CharField(
         db_column="Email", unique=True, max_length=320
-    )  # Field name made lowercase."""
+    )  # Field name made lowercase.
     addresse_postale = models.CharField(
         db_column="Addresse_Postale", max_length=6
     )  # Field name made lowercase.
@@ -113,29 +108,15 @@ class LibraryUserProfile(models.Model):
         db_column="Expiration_Subscription"
     )  # Field name made lowercase.
     permissions = models.CharField(
-        db_column="Permissions", max_length=2, default="OO"
+        db_column="Permissions", max_length=2
     )  # Field name made lowercase.
     related_library_id = models.CharField(
         db_column="Related_Library_ID", max_length=2, blank=True, null=True
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "User_List"
-
-
-# hooks sur la création d'un utilisateur, je crois. One to one relationship SQL,
-# https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        LibraryUserProfile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def saver_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
 
 
 class WorkList(models.Model):
@@ -180,5 +161,5 @@ class WorkList(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Work_List"
