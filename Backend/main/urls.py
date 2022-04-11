@@ -11,5 +11,4 @@ urlpatterns = [
     path("profile/settings", views.settings, name="settings"),
     path("panier", views.panier, name="panier"),
     path("librairie/<int:id>", views.librairie, name="libraire"),
-    path("register/", views.register, name="register"),
 ]
