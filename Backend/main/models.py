@@ -86,7 +86,7 @@ class UserList(models.Model):
         db_column="ID_Users", primary_key=True, max_length=16
     )  # Field name made lowercase.
     password_hash = models.CharField(
-        db_column="Password_Hash", max_length=32
+        db_column="Password_Hash", max_length=255
     )  # Field name made lowercase.
     name = models.CharField(
         db_column="Name", max_length=50
@@ -99,7 +99,7 @@ class UserList(models.Model):
         db_column="Fees", max_digits=10, decimal_places=0
     )  # Field name made lowercase.
     email = models.CharField(
-        db_column="Email", unique=True, max_length=320
+        db_column="Email", unique=True, max_length=255
     )  # Field name made lowercase.
     addresse_postale = models.CharField(
         db_column="Postal_Code", max_length=6
@@ -127,7 +127,7 @@ class WorkList(models.Model):
         db_column="Name_Works", max_length=50
     )  # Field name made lowercase.
     author_name = models.CharField(
-        db_column="Author_Name", max_length=250
+        db_column="Author_Name", max_length=255
     )  # Field name made lowercase.
     publication_date = models.DateField(
         db_column="Publication_Date"
@@ -138,7 +138,7 @@ class WorkList(models.Model):
     length = models.PositiveIntegerField(
         db_column="Length"
     )  # Field name made lowercase.
-    resume = models.CharField(
+    resume = models.TextField(
         db_column="Resume", max_length=2000
     )  # Field name made lowercase.
     genre = models.CharField(
@@ -163,3 +163,23 @@ class WorkList(models.Model):
     class Meta:
         managed = True
         db_table = "Work_List"
+
+
+class Work_Media_List(models.Model):
+    id_works = models.ForeignKey(
+        "WorkList", on_delete=models.CASCADE, db_column="ID_Works"
+    )
+    photo_path_work = models.TextField(
+        max_length=10000,
+        default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg",
+    )
+
+
+class User_Media_List(models.Model):
+    id_user = models.ForeignKey(
+        "WorkList", on_delete=models.CASCADE, db_column="User_List"
+    )
+    photo_path_work = models.TextField(
+        max_length=10000,
+        default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png",
+    )
