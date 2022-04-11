@@ -43,7 +43,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Password_Hash` VARCHAR(64) NOT NULL,
+  `Password_Hash` VARCHAR(255) NOT NULL,
   `Name` VARCHAR(50) NOT NULL,
   `First_Name` VARCHAR(100) NOT NULL,
   `Date_Birth` DATE NOT NULL,
