@@ -86,7 +86,7 @@ class UserList(models.Model):
         db_column="ID_Users", primary_key=True, max_length=16
     )  # Field name made lowercase.
     password_hash = models.CharField(
-        db_column="Password_Hash", max_length=32
+        db_column="Password_Hash", max_length=255
     )  # Field name made lowercase.
     name = models.CharField(
         db_column="Name", max_length=50
