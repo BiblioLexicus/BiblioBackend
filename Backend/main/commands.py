@@ -89,7 +89,6 @@ def create_book(response, liste_info):
                     10, True, PermissionEnums.AA, genre, type_livre
                 )
             )
-            print("val id:" + val_id)
 
             # Création de l'objet
             livre = WorkList(

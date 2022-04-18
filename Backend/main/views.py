@@ -1,3 +1,4 @@
+from math import log10
 import os
 
 from django.contrib.auth.decorators import login_required
@@ -16,7 +17,6 @@ def home(response):
 
     if search_home(response) != "":
         recherche = search_home(response)
-        print(recherche)
         return redirect(
             "/search/" + str(recherche)
         )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
@@ -31,7 +31,7 @@ def search(response, name):
         print(recherche)
         return redirect("/search/" + str(recherche))
 
-    out_liste = search_page_affichage(recherche)  # Liste de résultats
+    out_liste = search_page_affichage(name)  # Liste de résultats (NE PAS CHANGER)
 
     return render(
         response,
@@ -133,34 +133,42 @@ def administration(response):
     )
 
 
-def profile(response):
-    if search_home(response) != "":
-        recherche = search_home(response)
+def profile(request):
+    if search_home(request) != "":
+        recherche = search_home(request)
         print(recherche)
         return redirect(
             "/search/" + str(recherche)
         )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
-    second_name = "Test"
-    first_name = "Test"
-    adress = "Bois de Boulogne"
-    phone_number = "+1 (514) 514-5140"
-    expiration_date = "23/02/01"
 
+
+    log = request.COOKIES['is_logged']
+    user = None
+
+    if log == "True": 
+        log = True
+    else: 
+        log = False
+
+    id_user = request.COOKIES['id_user']
     liste_emprunts = ["emprunt1", "emprunt2", "emprunt3"]
 
-    return render(
-        response,
+    if log: 
+        user = UserList.objects.filter(id_users=id_user)[0]
+
+    response = render(
+        request,
         "main/profil.html",
         {
-            "second_name": second_name,
-            "first_name": first_name,
-            "adress": adress,
-            "phone_number": phone_number,
-            "expiration>_date": expiration_date,
+            "user": user, 
             "liste_emprunts": liste_emprunts,
+            "log": log,
         }
         | default_dict,
     )
+
+
+    return response
 
 
 def panier(response):

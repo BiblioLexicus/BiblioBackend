@@ -14,4 +14,5 @@ urlpatterns = [
     path("librairie/<int:library_id>", views.librairie, name="libraire"),
     path("login/", v.login, name="login"),
     path("inscription/", v.register, name="register"),
+    path("deconnexion/", v.logout, name="deconnexion"),
 ]
