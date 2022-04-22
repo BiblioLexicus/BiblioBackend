@@ -40,7 +40,7 @@ def creation_utilisateur(request):
                 email=email,
                 addresse_postale=adress,
                 expiration_subscription=expiration_subscription,
-                permissions="AA",  # Il faut changer cela pour une permission par defaut qui n'est pas Admin
+                permissions="OO",  # Il faut changer cela pour une permission par defaut qui n'est pas Admin
                 related_library_id="01",
             )  # Rajouter un input pour cette valeur
             user.save()
@@ -57,10 +57,11 @@ def creation_utilisateur(request):
 def connexion(request):
     try: 
         email = request.POST.get('email')
-        passwordNotHashed = str(request.POST.get('mdplogin'))
+        passwordNotHashed = request.POST.get('mdplogin')
 
         hashedPwd = hashlib.sha256(bytes(passwordNotHashed, encoding='utf-8')).hexdigest()
         
+        print(hashedPwd, UserList.objects.filter(email=email)[0].password_hash)
         if hashedPwd == UserList.objects.filter(email=email)[0].password_hash:
             return True, UserList.objects.filter(email=email)[0].id_users # return true si logged in
 

@@ -15,18 +15,22 @@ def login(request):
         request, "registration/login.html", {"log": False} | default_dict
     )
 
+    print(connexion(request))
     connexion_status = connexion(request) # Contient des informations de connexion
 
-    if connexion_status[0]: 
-        try: 
-            response = render(
-                request, "registration/login.html", {"user": UserList.objects.filter(email=str(request.POST.get('email')))[0], "log": True} | default_dict
-            )
-            response.set_cookie('is_logged', True)
-            response.set_cookie('id_user', connexion_status[1])
-            return response
-        except: 
-            pass
+    try: 
+        if connexion_status[0]: 
+            try: 
+                response = render(
+                    request, "registration/login.html", {"user": UserList.objects.filter(email=str(request.POST.get('email')))[0], "log": True} | default_dict
+                )
+                response.set_cookie('is_logged', True)
+                response.set_cookie('id_user', connexion_status[1])
+                return response
+            except: 
+                pass
+    except: 
+        pass
 
     return response
 

@@ -41,6 +41,9 @@ def search(response, name):
 
 
 def item(response, item_id):
+
+    state_of_emprunt = None
+
     if search_home(response) != "":
         recherche = search_home(response)
         return redirect(
@@ -50,14 +53,26 @@ def item(response, item_id):
     info_livre = affichage_item(item_id)  # Item specifique à afficher
     info_livre = info_livre[0]
 
+    if response.method == "GET": 
+        if response.GET.get("emprunt"): 
+            if response.COOKIES['is_logged'] == 'True': 
+                state_of_emprunt = emprunter(response)
+
+
     return render(
         response,
         "main/item.html",
-        {"livre": info_livre} | default_dict,
+        {"livre": info_livre, "state_of_emprunt": state_of_emprunt} | default_dict,
     )
 
 
 def administration(response):
+
+    id_user = response.COOKIES['id_user']
+
+    if UserList.objects.filter(id_users=id_user)[0].permissions != 'AA': # verifie que l'utilisateur est admin
+        return redirect('/')
+
     liste_info = [
         "nomLivre",
         "authorName",
@@ -144,6 +159,7 @@ def profile(request):
 
     log = request.COOKIES['is_logged']
     user = None
+    liste_emprunts = None
 
     if log == "True": 
         log = True
@@ -151,9 +167,9 @@ def profile(request):
         log = False
 
     id_user = request.COOKIES['id_user']
-    liste_emprunts = ["emprunt1", "emprunt2", "emprunt3"]
 
     if log: 
+        liste_emprunts = search_emprunt(request, id_user)
         user = UserList.objects.filter(id_users=id_user)[0]
 
     response = render(

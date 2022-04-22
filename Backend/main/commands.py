@@ -1,9 +1,49 @@
 import datetime
 import decimal
+import calendar
 
 from .IDEnums import *
 from .IDManagement import *
 from .models import *
+
+#Ajoute 1 mois pour le loan... Src: StackOverflow
+def add_months(sourcedate, months):
+    month = sourcedate.month - 1 + months
+    year = sourcedate.year + month // 12
+    month = month % 12 + 1
+    day = min(sourcedate.day, calendar.monthrange(year,month)[1])
+    return datetime.date(year, month, day)
+
+#Fonction pour emprunter un livre
+def emprunter(response): 
+    user_id = response.COOKIES["id_user"]
+    user = UserList.objects.filter(id_users=user_id)[0]
+
+    if LoanedWorks.objects.filter(id_users=user).exists(): 
+        return False
+
+    else: 
+        loan = LoanedWorks(id_works=WorkList.objects.filter(id_works=response.GET.get("id_work"))[0],
+                        end_loan_date = add_months(datetime.date.today(), 1),
+                        id_users = user, 
+                        work_lost = int(0)) 
+        
+        loan.save()
+        return True
+
+#Fonction pour trouver les livres qui ont été emprunté par un utilisateur
+def search_emprunt(response, id): 
+    user = UserList.objects.filter(id_users=str(id))[0]
+    liste_emprunts = LoanedWorks.objects.filter(id_users=user)
+
+    emprunts = []
+
+    for ouvrage in liste_emprunts: 
+        emprunts.append(ouvrage.id_works)
+
+    return emprunts
+
+
 
 
 # Fonction pour faire de la recherche dans la page d'Acceuil
