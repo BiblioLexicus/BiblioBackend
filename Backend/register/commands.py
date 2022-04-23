@@ -2,12 +2,13 @@ import decimal
 import hashlib
 from datetime import datetime
 
-from django.db.models.query import QuerySet
+#from django.db.models.query import QuerySet
 from main.IDManagement import *
 from main.models import UserList
+from django.contrib.auth.hashers import make_password, check_password
 
 
-def verification_existence(email: str) -> QuerySet:
+def verification_existence(email: str):
     """
     Verifie si un utilisateur avec un email existe deja
 
@@ -17,7 +18,7 @@ def verification_existence(email: str) -> QuerySet:
     return UserList.objects.filter(email=email).exists()
 
 
-def creation_utilisateur(request) -> bool:
+def creation_utilisateur(request):
     """
     Créé un utilisateur.
 
@@ -37,8 +38,8 @@ def creation_utilisateur(request) -> bool:
     date_naissance = datetime.strptime(date_naissance, "%Y-%m-%d")
     expiration_subscription = datetime.strptime("3000-12-12", "%Y-%m-%d")
     user_id = generalIdCreationAndManagement(1, False, "AA", None, None)
-    hashedPwd = hashlib.sha256(bytes(passwordNotHash, encoding="utf-8")).hexdigest()
-
+    hashedPwd = make_password(str(passwordNotHash)) # Built-in django function to hash password 
+    
     if not verification_existence(email):
         try:
             user = UserList(
@@ -65,7 +66,7 @@ def creation_utilisateur(request) -> bool:
         return False
 
 
-def connexion(request) -> (bool, UserList):
+def connexion(request):
     """
     Connexion de l'utilisateur à son compte
 
@@ -76,11 +77,7 @@ def connexion(request) -> (bool, UserList):
         email = request.POST.get("email")
         passwordNotHashed = request.POST.get("mdplogin")
 
-        hashedPwd = hashlib.sha256(
-            bytes(passwordNotHashed, encoding="utf-8")
-        ).hexdigest()
-
-        if hashedPwd == UserList.objects.filter(email=email)[0].password_hash:
+        if check_password(passwordNotHashed, UserList.objects.filter(email=email)[0].password_hash): # Built-in django function to check hash 
             return (
                 True,
                 UserList.objects.filter(email=email)[0].id_users,
