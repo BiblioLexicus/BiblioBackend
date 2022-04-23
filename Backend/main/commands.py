@@ -1,53 +1,64 @@
-import datetime
 import decimal
-import calendar
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
+from django.db.models.query import QuerySet
 
 from .IDEnums import *
 from .IDManagement import *
-from .models import *
+from .models import LoanedWorks, UserList, WorkList
 
-#Ajoute 1 mois pour le loan... Src: StackOverflow
-def add_months(sourcedate, months):
-    month = sourcedate.month - 1 + months
-    year = sourcedate.year + month // 12
-    month = month % 12 + 1
-    day = min(sourcedate.day, calendar.monthrange(year,month)[1])
-    return datetime.date(year, month, day)
 
-#Fonction pour emprunter un livre
-def emprunter(response): 
+def emprunter(response):
+    """
+    Emprunter un item.
+
+    :param response:
+    :return:
+    """
     user_id = response.COOKIES["id_user"]
     user = UserList.objects.filter(id_users=user_id)[0]
 
-    if LoanedWorks.objects.filter(id_users=user).exists(): 
+    if LoanedWorks.objects.filter(id_users=user).exists():
         return False
 
-    else: 
-        loan = LoanedWorks(id_works=WorkList.objects.filter(id_works=response.GET.get("id_work"))[0],
-                        end_loan_date = add_months(datetime.date.today(), 1),
-                        id_users = user, 
-                        work_lost = int(0)) 
-        
+    else:
+        loan = LoanedWorks(
+            id_works=WorkList.objects.filter(id_works=response.GET.get("id_work"))[0],
+            end_loan_date=datetime.now() + relativedelta(months=1),
+            id_users=user,
+            work_lost=int(0),
+        )
+
         loan.save()
         return True
 
-#Fonction pour trouver les livres qui ont été emprunté par un utilisateur
-def search_emprunt(response, id): 
-    user = UserList.objects.filter(id_users=str(id))[0]
+
+def search_emprunt(user_id):
+    """
+    Trouve les items qui ont été empruntés par un utilisateur
+
+    :param user_id:
+    :return:
+    """
+    user = UserList.objects.filter(id_users=str(user_id))[0]
     liste_emprunts = LoanedWorks.objects.filter(id_users=user)
 
     emprunts = []
 
-    for ouvrage in liste_emprunts: 
+    for ouvrage in liste_emprunts:
         emprunts.append(ouvrage.id_works)
 
     return emprunts
 
 
-
-
-# Fonction pour faire de la recherche dans la page d'Acceuil
 def search_home(response):
+    """
+    recherche dans la page d'Acceuil????
+
+    :param response:
+    :return:
+    """
     if response.method == "GET":
         if response.GET.get("search"):
             recherche = response.GET.get("livre")
@@ -55,18 +66,28 @@ def search_home(response):
     return ""
 
 
-# Fonction pour afficher la liste des recherches sur la page search.html
-def search_page_affichage(name):
-    liste_livres = WorkList.objects.all().filter(name_works=name)
+def search_item_by_name(name: str) -> QuerySet:
+    """
+    Cherche l'item.
 
-    return liste_livres
+    :param name:
+    :return:
+    """
+    list_items: QuerySet = WorkList.objects.all().filter(name_works=name)
+
+    return list_items
 
 
-# Fonction pour afficher des informations sur un ouvrage précis
-def affichage_item(item_id):
-    livre = WorkList.objects.all().filter(id_works=item_id)
+def search_precise_item(item_id: str) -> QuerySet:
+    """
+    Cherche un item précis par son ID.
 
-    return livre
+    :param item_id:
+    :return:
+    """
+    item = WorkList.objects.all().filter(id_works=item_id)
+
+    return item
 
 
 # Fonction qui sert a faire la recherche dans la page d'administration
@@ -77,13 +98,14 @@ def administration_search(query):
     return recherche
 
 
-# Fonction pour la page de recherche avance qui va permettre a l'utilisateur d'avoir un resultat plus precis.
-def recherche_avance():
-    pass
+def create_item(response, liste_info):
+    """
+    Crée un item. Retourne True si l'item a été créé, False si l'item n'a pas pu être créé.
 
-
-# Fonction pour créer un livre
-def create_book(response, liste_info):
+    :param response:
+    :param liste_info:
+    :return:
+    """
     if response.method == "POST":
 
         for (
@@ -114,16 +136,9 @@ def create_book(response, liste_info):
             price = response.POST.get("price")
 
             # modification de la date de publication:
-            date_publication_list = date_publication.split("-")
-            date_publication = datetime.date(
-                int(date_publication_list[0]),
-                int(date_publication_list[1]),
-                int(date_publication_list[2]),
-            )
+            date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
 
-            # Création de l'id (Pour l'instant j'ai fait des enum par défaut en attendant que je finisse le html avec
-            # les bandes déroulantes)
-
+            # Création de l'id
             val_id = str(
                 generalIdCreationAndManagement(
                     10, True, PermissionEnums.AA, genre, type_livre
@@ -149,21 +164,32 @@ def create_book(response, liste_info):
             livre.save()  # Enregistrement de l'objet
             print("livre créé")
             return True  # Retourne True si il le livre est créé.
-        except:
-            print("erreur")
+        except Exception as e:
+            print(f"erreur: {e}")
             return False  # Retroune False si le livre n'est pas créé."""
 
 
-def search_book_by_id(response):
-    return WorkList.objects.all().filter(id_works=response.POST.get("id_work"))
+def delete_item(response):
+    """
+    Delete an item.
 
-
-def supprimer_livre(response):
+    :param response:
+    :return:
+    """
     id_delete = response.POST.get("id_work")  # Id du livre à delete
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
 
 
-def edit_book_admin(response, liste_info):
-    print(response.POST.get("id_edit_livre"))
-    WorkList.objects.filter(id_works=str(response.POST.get("id_edit_livre"))).delete()
-    create_book(response, liste_info)
+def edit_item(response, liste_info):
+    """
+    Edit an item. TODO come back here to update all values of the item
+
+    :param response:
+    :param liste_info:
+    :return:
+    """
+    item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
+
+    """print(liste_info)
+    for info in liste_info:
+        setattr(item, info, info)"""

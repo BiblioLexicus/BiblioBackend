@@ -2,8 +2,14 @@ import math
 import random
 
 
-def intToid2Char(valInt):
-    convertionTab = {
+def intToid2Char(val_int):
+    """
+    ???
+
+    :param val_int:
+    :return:
+    """
+    convertion_tab = {
         10: "a",
         11: "b",
         12: "c",
@@ -27,23 +33,28 @@ def intToid2Char(valInt):
         30: "u",
         31: "v",
     }
-    valInt / 32
+    val_int / 32
     final_id = (
-        str(convertionTab.get(int(valInt / 32)))
-        if valInt / 32 >= 10
-        else str(int(valInt / 32))
+        str(convertion_tab.get(int(val_int / 32)))
+        if val_int / 32 >= 10
+        else str(int(val_int / 32))
     )
 
     final_id += (
-        str(convertionTab.get(valInt % 32))
-        if valInt % 32 > 9
-        else str(int(valInt % 32))
+        str(convertion_tab.get(val_int % 32))
+        if val_int % 32 > 9
+        else str(int(val_int % 32))
     )
-    print(valInt % 32)
+    print(val_int % 32)
     return final_id
 
 
 def creationIdUnique():
+    """
+    ????
+
+    :return:
+    """
     return math.floor(
         (math.pow(2, 32) * random.random())
     )  # return un int avec math.floor()
@@ -54,34 +65,49 @@ def id2CharToInt(id_char):
     return int(id_char, 32)
 
 
-# bookOrUser est un boolean qui si true alors book sinon user
 def generalIdCreationAndManagement(
-    valInt, bookOrUser, idPermission, idCategorie, idType
-):
-    thisId = ""
-    if bookOrUser:
-        thisId = (
-            str(intToid2Char(valInt))
+    val_int, book_or_user, id_permission, id_categorie, id_type
+) -> str:
+    """
+    Creates an ID for a book and user
+
+    :param val_int:
+    :param book_or_user: True if a book, False for a user
+    :param id_permission:
+    :param id_categorie:
+    :param id_type:
+    :return:
+    """
+    final_id: str
+    if book_or_user:
+        final_id = (
+            str(intToid2Char(val_int))
             + " "
-            + str(idCategorie)
+            + str(id_categorie)
             + " "
-            + str(idType)
+            + str(id_type)
             + " "
             + str(hex(creationIdUnique())[2:])
             + " "
             + "00"
         )
     else:
-        thisId = (
-            str(intToid2Char(valInt))
+        final_id = (
+            str(intToid2Char(val_int))
             + " "
             + str(hex(creationIdUnique())[2:])
             + " "
-            + str(idPermission)
+            + str(id_permission)
         )
-    return thisId  # retourne un string
+    return final_id
 
 
-def additionOfMultipleSameBooks(idDernierObjet):
-    thisId = idDernierObjet.split()
-    thisId[thisId.lenght - 1] = "0" + str(int(thisId[thisId.lenght - 1]) + 1)
+def additionOfMultipleSameBooks(last_object_id: str):
+    """
+    ???
+
+    :param last_object_id:
+    :return:
+    """
+    this_id = last_object_id.split()
+    this_id[len(this_id) - 1] = "0" + str(int(this_id[len(this_id) - 1]) + 1)

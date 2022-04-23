@@ -1,9 +1,8 @@
-from math import log10
 import os
+from typing import Optional
 
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.shortcuts import redirect, render
+from django.utils.html import escape
 
 from .commands import *
 from .IDEnums import *
@@ -13,25 +12,33 @@ organisation_name = os.getenv("ORGANISATION_NAME")
 
 
 def home(response):
-    # Page d'acceuil du site web
+    """
+    Page d'acceuil.
 
-    if search_home(response) != "":
-        recherche = search_home(response)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
+    :param response:
+    :return:
+    """
+    # Page d'acceuil du site web
 
     return render(response, "main/acceuil.html", {} | default_dict)
 
 
-def search(response, name):
-    recherche = ""
-    if len(search_home(response)) > 3:
-        recherche = search_home(response)
+def search(response, name: Optional[str] = ""):
+    """
+    Search for an item.
+
+    :param response:
+    :param name: The name of the item
+    :return:
+    """
+    name = escape(name)
+
+    recherche = search_home(response)
+    if recherche:
         print(recherche)
         return redirect("/search/" + str(recherche))
 
-    out_liste = search_page_affichage(name)  # Liste de résultats (NE PAS CHANGER)
+    out_liste = search_item_by_name(name=name)  # Liste de résultats
 
     return render(
         response,
@@ -41,23 +48,22 @@ def search(response, name):
 
 
 def item(response, item_id):
+    """
 
+
+    :param response:
+    :param item_id:
+    :return:
+    """
     state_of_emprunt = None
 
-    if search_home(response) != "":
-        recherche = search_home(response)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
-
-    info_livre = affichage_item(item_id)  # Item specifique à afficher
+    info_livre = search_precise_item(item_id)  # Item specifique à afficher
     info_livre = info_livre[0]
 
-    if response.method == "GET": 
-        if response.GET.get("emprunt"): 
-            if response.COOKIES['is_logged'] == 'True': 
+    if response.method == "GET":
+        if response.GET.get("emprunt"):
+            if response.COOKIES["is_logged"] == "True":
                 state_of_emprunt = emprunter(response)
-
 
     return render(
         response,
@@ -67,11 +73,19 @@ def item(response, item_id):
 
 
 def administration(response):
+    """
+    TODO
 
-    id_user = response.COOKIES['id_user']
+    :param response:
+    :return:
+    """
 
-    if UserList.objects.filter(id_users=id_user)[0].permissions != 'AA': # verifie que l'utilisateur est admin
-        return redirect('/')
+    id_user = response.COOKIES["id_user"]
+
+    if (
+        UserList.objects.filter(id_users=id_user)[0].permissions != "AA"
+    ):  # verifie que l'utilisateur est admin
+        return redirect("/")
 
     liste_info = [
         "nomLivre",
@@ -97,27 +111,20 @@ def administration(response):
     are_we_editing = False
     etat_id = 0
 
-    if search_home(response) != "":
-        recherche = search_home(response)
-        return redirect("/search/" + str(recherche))
-
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
             recherche = response.GET.get("livre")
             out = administration_search(recherche)
 
-    if (
-        response.method == "POST"
-    ):  # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
+    if response.method == "POST":
+        # Si il y a une request POST, on envoie la requête à commands.py pour créer un livre.
         if response.POST.get("create"):
-            creation = create_book(
-                response, liste_info
-            )  # Creation est un boolean: (True si le livre est créé) (False si le livre n'est pas créé)
+            creation = create_item(response, liste_info)
         if response.POST.get("Supprimer"):
-            supprimer_livre(response)
+            delete_item(response)
 
         if response.POST.get("Modifier"):
-            edit_book = search_book_by_id(response)[0]
+            edit_book = search_item_by_name(response)[0]
             date_str = edit_book.publication_date.strftime("%Y-%m-%d")
             genre = str(WorkCategoryEnums[edit_book.genre].value)
             etat = str(
@@ -128,7 +135,7 @@ def administration(response):
             etat_id = int(1 if int.from_bytes(edit_book.state, "big") == 1 else 0)
 
         if response.POST.get("edit"):
-            edit_book_admin(response, liste_info)
+            edit_item(response, liste_info)
 
     return render(
         response,
@@ -149,51 +156,49 @@ def administration(response):
 
 
 def profile(request):
-    if search_home(request) != "":
-        recherche = search_home(request)
-        print(recherche)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
+    """
 
 
-    log = request.COOKIES['is_logged']
+    :param request:
+    :return:
+    """
+
+    log = request.COOKIES["is_logged"]
     user = None
     liste_emprunts = None
 
-    if log == "True": 
+    if log == "True":
         log = True
-    else: 
+    else:
         log = False
 
-    id_user = request.COOKIES['id_user']
+    id_user = request.COOKIES["id_user"]
 
-    if log: 
-        liste_emprunts = search_emprunt(request, id_user)
+    if log:
+        liste_emprunts = search_emprunt(id_user)
         user = UserList.objects.filter(id_users=id_user)[0]
 
     response = render(
         request,
         "main/profil.html",
         {
-            "user": user, 
+            "user": user,
             "liste_emprunts": liste_emprunts,
             "log": log,
         }
         | default_dict,
     )
 
-
     return response
 
 
 def panier(response):
-    if search_home(response) != "":
-        recherche = search_home(response)
-        print(recherche)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
+    """
+
+
+    :param response:
+    :return:
+    """
 
     liste_emprunts = ["livre 1", "livre 2", "livre 3"]
 
@@ -203,12 +208,13 @@ def panier(response):
 
 
 def librairie(response, library_id):
-    if search_home(response) != "":
-        recherche = search_home(response)
-        print(recherche)
-        return redirect(
-            "/search/" + str(recherche)
-        )  # Redirect l'utilisateur à la page de recherche en passant la recherche comme paramètre.
+    """
+    TODO
+
+    :param response:
+    :param library_id:
+    :return:
+    """
 
     librairie_nom = "Bibliothèque de Montreal"
     adresse = "rue de montreal"
@@ -227,6 +233,12 @@ def librairie(response, library_id):
 
 
 def settings(response):
+    """
+    TODO
+
+    :param response:
+    :return:
+    """
     user = {
         "name": "Jean-jacques",
         "email": "jean@jacques.a",

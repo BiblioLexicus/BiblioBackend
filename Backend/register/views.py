@@ -1,7 +1,6 @@
 import os
 
-from django.shortcuts import redirect, render
-from main.models import UserList
+from django.shortcuts import render
 from register.commands import *
 
 # Create your views here.
@@ -9,32 +8,52 @@ from register.commands import *
 default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
 
 
-# models.py a une fonction userlist + username + email. On peut avoir accès a cela quand on crée django
-def login(request): 
-    response = render(
-        request, "registration/login.html", {"log": False} | default_dict
-    )
+def login(request):
+    """
+    Login.
+    TODO: models.py a une fonction userlist + username + email. On peut avoir accès a cela quand on crée django
 
-    print(connexion(request))
-    connexion_status = connexion(request) # Contient des informations de connexion
+    :param request:
+    :return:
+    """
+    response = render(request, "registration/login.html", {"log": False} | default_dict)
 
-    try: 
-        if connexion_status[0]: 
-            try: 
+    connexion_status = connexion(request)  # Contient des informations de connexion
+
+    try:
+        if connexion_status[0]:
+            try:
                 response = render(
-                    request, "registration/login.html", {"user": UserList.objects.filter(email=str(request.POST.get('email')))[0], "log": True} | default_dict
+                    request,
+                    "registration/login.html",
+                    {
+                        "user": UserList.objects.filter(
+                            email=str(request.POST.get("email"))
+                        )[0],
+                        "log": True,
+                    }
+                    | default_dict,
                 )
-                response.set_cookie('is_logged', True)
-                response.set_cookie('id_user', connexion_status[1])
+                response.set_cookie("is_logged", True)
+                response.set_cookie("id_user", connexion_status[1])
                 return response
-            except: 
+            except Exception as e:
+                print(e)
                 pass
-    except: 
+    except Exception as e:
+        print(e)
         pass
 
     return response
 
+
 def register(request):
+    """
+    Enregistre un nouvel utilisateur.
+
+    :param request:
+    :return:
+    """
     creation = None
 
     response = render(
@@ -51,15 +70,20 @@ def register(request):
                     "registration/register.html",
                     {"creation": creation} | default_dict,
                 )
-                #response.set_cookie("is_logged", True)  Creation d'un cookie logged_in
-                #value_logged = request.COOKIES["is_logged"] pour avoir la valeur d'un cookie
+                # response.set_cookie("is_logged", True)  Creation d'un cookie logged_in
+                # value_logged = request.COOKIES["is_logged"] pour avoir la valeur d'un cookie
 
     return response
 
-def logout(request): 
-    response = render(
-        request, "registration/logout.html", {} | default_dict
-    )
+
+def logout(request):
+    """
+    Déconnexion d'un utilisateur.
+
+    :param request:
+    :return:
+    """
+    response = render(request, "registration/logout.html", {} | default_dict)
 
     response.set_cookie("is_logged", False)
     response.set_cookie("id_user", None)
