@@ -1,17 +1,17 @@
-# BiblioBackend - Simulation du système d'archivage et de prêt d'une bibliothèque publique 
+# BiblioBackend - Simulation du système d'archivage et de prêt d'une bibliothèque publique (FR)
 Simulation d'un système de gestion de livres en bibliothèque. 
 ## Table of content
 
 * []()
-* [Technologies](#Technologies)
-* [Setting Up](#Setting-Up)
+* [Technologies](#technologies(fr))
+* [Instruction d'installation](#instruction-d'installation)
 
-## Technologies
+## Technologies(fr)
 Used technologies in this project
 * Django version: 4.0.4
 * SQL and MariaDB: oldest version 10.3
 
-## Setting up
+## Instruction d'installation
 
 Install dependencies with `poetry install` (`pip install poetry`)
 
@@ -23,7 +23,7 @@ poetry run pre-commit install -t=pre-commit -t=pre-push
 Install any new dependancy with `poetry add <package>`
 
 
-# BiblioBackend - Public Library Mockup Project Backend 
+# BiblioBackend - Public Library Mockup Project Backend (EN)
 Backend of the BiblioLexicus project.
 
 ## Table of content
@@ -32,7 +32,7 @@ Backend of the BiblioLexicus project.
 * [Technologies](#Technologies)
 * [Setting Up](#Setting-Up)
 
-## Technologies
+## Technology
 Used technologies in this project
 * Django version: 4.0.4
 * SQL and MariaDB: oldest version 10.3
