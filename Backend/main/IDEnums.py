@@ -35,3 +35,17 @@ class WorkTypeEnum(Enum):
     TD = "Triller et Drame"
     CR = "Comedie et Romance"
     OO = "Autres"
+
+
+class PermissionEnums(Enum):
+    OO = "Utilisateur par defaut"
+    A1 = "Membre de la bibliotheque pouvant changer l'etat d'un livre"
+    AA = "Adminitrateur Principale de bibliothèque X"
+    DD = "Directeur du bibliotheque X (son ID est aussi relie au bibliotheque)"
+    PC = "Particuliers ou Compagnies fournissant les livres et materiels a la bibliotheque"
+    TZ = "Technicien du bibliotheque X"
+    ZZ = "Administrateur du serveur en general"
+
+
+# les ordres de priorités vont dans ce sense (plus petit au plus grand)
+# OO, PC, A1, DD, TZ, AA, ZZ

@@ -18,7 +18,7 @@ USE `BiblioLexicusDB` ;
 -- Table `BiblioLexicusDB`.`Work_List`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
-  `ID_Works` VARCHAR(16) NOT NULL,
+  `ID_Works` VARCHAR(20) NOT NULL,
   `Name_Works` VARCHAR(50) NOT NULL,
   `Author_Name` VARCHAR(250) NOT NULL,
   `Publication_Date` DATE NOT NULL,
@@ -36,16 +36,39 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
 ENGINE = InnoDB;
 
 
+
+
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`User_List`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
+  `ID_Users` VARCHAR(18) NOT NULL,
+  `Password_Hash` VARCHAR(255) NOT NULL,
+  `Name` VARCHAR(50) NOT NULL,
+  `First_Name` VARCHAR(100) NOT NULL,
+  `Date_Birth` DATE NOT NULL,
+  `Fees` DECIMAL UNSIGNED NOT NULL DEFAULT 0,
+  `Email` VARCHAR(320) NOT NULL,
+  `Postal_Code` VARCHAR(6) NOT NULL,
+  `Expiration_Subscription` DATE NOT NULL,
+  `Permissions` VARCHAR(2) NOT NULL DEFAULT 'OO',
+  `Related_Library_ID` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`ID_Users`),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
+  UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`Libraries_Data`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Libraries_Data` (
-  `ID_Users` VARCHAR(16) NOT NULL,
-  `Schedules` VARCHAR(11) NOT NULL,
+  `ID_Users` VARCHAR(18) NOT NULL,
+  `Schedules` VARCHAR(11) NOT NULL, 
   `Postal_Code` VARCHAR(6) NOT NULL,
-  `Library_Website` VARCHAR(45) NOT NULL,
+  `Library_Website` VARCHAR(200) NOT NULL, 
   `Phone_Address` VARCHAR(14) NOT NULL,
-  `Library_Name` VARCHAR(45) NULL,
+  `Library_Name` VARCHAR(45) NOT NULL,
   `ID_Library` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`ID_Library`),
   INDEX `fk_Donnees_Bibiliotheque_User_List1`
@@ -57,35 +80,13 @@ CONSTRAINT `fk_Donnees_Bibiliotheque_User_List1`
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `BiblioLexicusDB`.`User_List`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_List` (
-  `ID_Users` VARCHAR(16) NOT NULL,
-  `Password_Hash` VARCHAR(32) NOT NULL,
-  `Name` VARCHAR(50) NOT NULL,
-  `First_Name` VARCHAR(100) NOT NULL,
-  `Date_Birth` DATE NOT NULL,
-  `Fees` DECIMAL UNSIGNED NOT NULL DEFAULT 0,
-  `Email` VARCHAR(320) NOT NULL,
-  `Postal_Code` VARCHAR(6) NOT NULL,
-  `Expiration_Subscription` DATE NOT NULL,
-  `Permissions` VARCHAR(2) NOT NULL DEFAULT '00',
-  `Related_Library_ID` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID_Users`),
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
-  UNIQUE INDEX `ID_Users_UNIQUE` (`ID_Users` ASC) VISIBLE)
-ENGINE = InnoDB;
-
-
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`Loaned_Works`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Loaned_Works` (
-  `ID_Works` VARCHAR(16) NOT NULL,
+  `ID_Works` VARCHAR(20) NOT NULL,
   `End_Loan_Date` DATE NOT NULL,
-  `ID_Users` VARCHAR(16) NOT NULL,
+  `ID_Users` VARCHAR(18) NOT NULL,
   `Work_Lost` BIT NOT NULL,
   PRIMARY KEY (`ID_Works`, `ID_Users`),
   UNIQUE INDEX `ID_Works_UNIQUE` (`ID_Works` ASC) VISIBLE,
@@ -108,8 +109,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Comments` (
   `ID_Comments` INT NOT NULL,
-  `ID_Works` VARCHAR(16) NOT NULL,
-  `ID_Users` VARCHAR(16) NOT NULL,
+  `ID_Works` VARCHAR(20) NOT NULL,
+  `ID_Users` VARCHAR(18) NOT NULL,
   `Release_Date` DATETIME NOT NULL,
   `Comment_Text` TINYTEXT NOT NULL,
   PRIMARY KEY (`ID_Comments`, `ID_Works`, `ID_Users`),
@@ -128,6 +129,26 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Comments` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `BiblioLexicusDB`.`Work_Media_List`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
+  `ID_Works` VARCHAR(20) NOT NULL,
+  `Photo_Path_Work` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` 
+    FOREIGN KEY (`ID_Works`)
+    REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
+    ON DELETE NO ACTION,
+    ON UPDATE CASCADE,
+)
+CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
+  `ID_Users` VARCHAR(18) NOT NULL,
+  `Photo_Path_Users` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` 
+  CONSTRAINT `fk_Media_List_ID_Users`
+    FOREIGN KEY (`ID_Users`)
+    REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
+    ON DELETE NO ACTION,
+    ON UPDATE CASCADE,
+)
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
