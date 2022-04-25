@@ -138,6 +138,7 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 --essai d'une valeur random
-
-INSERT INTO `BiblioLexicusDB`.`Works` 
-VALUES (OO12121234567801,randomTitle,randomName,2001-01-01,randomEditionHouse,1L,256,bla bla bla uiyguyftr6r,FA,Fr,0,1,Mo,1.1511,4)
+--todo: a voir comment l'implementation se fera car des valeurs ont été modifié dans la database
+--ATTENTION: le database qu'on va utiliser est MtlBiblioDb_V1-5.sql
+--INSERT INTO `BiblioLexicusDB`.`Works` 
+--VALUES ("OO 12 12 12345678 01",randomTitle,randomName,2001-01-01,randomEditionHouse,1L,256,bla bla bla uiyguyftr6r,FA,Fr,0,1,Mo,1.1511,4) 
