@@ -1,6 +1,6 @@
 from enum import Enum
 
-
+#permet de créer la classification pour les ouvrages selon leur catégorie
 class WorkCategoryEnums(Enum):
     AB = "Album et Journaux"
     AM = "Anime et Manga"
@@ -21,7 +21,7 @@ class WorkCategoryEnums(Enum):
     RA = "Roman Adultes"
     OO = "Autres"
 
-
+#permet de trier les ouvrages d'une même catégorie selon leur type
 class WorkTypeEnum(Enum):
     AA = "Action et Aventure"
     RD = "Romance et Drame"
@@ -36,7 +36,7 @@ class WorkTypeEnum(Enum):
     CR = "Comedie et Romance"
     OO = "Autres"
 
-
+#permet de définir le niveau de permission des utilisateurs
 class PermissionEnums(Enum):
     OO = "Utilisateur par defaut"
     A1 = "Membre de la bibliotheque pouvant changer l'etat d'un livre"
@@ -45,7 +45,6 @@ class PermissionEnums(Enum):
     PC = "Particuliers ou Compagnies fournissant les livres et materiels a la bibliotheque"
     TZ = "Technicien du bibliotheque X"
     ZZ = "Administrateur du serveur en general"
-
 
 # les ordres de priorités vont dans ce sense (plus petit au plus grand)
 # OO, PC, A1, DD, TZ, AA, ZZ

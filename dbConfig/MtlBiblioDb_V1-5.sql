@@ -19,6 +19,7 @@ USE `BiblioLexicusDB` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_List` (
   `ID_Works` VARCHAR(20) NOT NULL,
+  `ID_Library` INT(99) NOT NULL,
   `Name_Works` VARCHAR(50) NOT NULL,
   `Author_Name` VARCHAR(250) NOT NULL,
   `Publication_Date` DATE NOT NULL,
