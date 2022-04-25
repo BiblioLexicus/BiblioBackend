@@ -109,5 +109,12 @@ def additionOfMultipleSameBooks(last_object_id: str):
     :param last_object_id:
     :return:
     """
+
+
+
     this_id = last_object_id.split()
-    this_id[len(this_id) - 1] = "0" + str(int(this_id[len(this_id) - 1]) + 1)
+    this_id[len(this_id) - 1] =  "0"+ str(int(this_id[len(this_id) - 1]) + 1)
+    print(this_id)
+    print(" ".join(this_id))
+
+    return " ".join(this_id)

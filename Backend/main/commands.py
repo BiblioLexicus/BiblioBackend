@@ -1,5 +1,7 @@
+from copy import copy
 import decimal
 from datetime import datetime
+from unicodedata import name
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
@@ -98,6 +100,16 @@ def administration_search(query):
     return recherche
 
 
+def creation_id_default(librarie_id, genre, type_livre):
+    copy_num = 1
+    # Création de l'id
+    val_id = str(
+                        generalIdCreationAndManagement(
+                        int(librarie_id), True, PermissionEnums.AA, genre, type_livre
+                    )
+                )
+    return copy_num, val_id
+
 def create_item(response, liste_info):
     """
     Crée un item. Retourne True si l'item a été créé, False si l'item n'a pas pu être créé.
@@ -131,24 +143,49 @@ def create_item(response, liste_info):
 
             etat = response.POST["dropdown_etat"]
 
-            numero_copie = response.POST.get("numeroCopie")
+            librarie_id = response.POST.get("numeroCopie")
             type_livre = response.POST["dropdown_type"]
             price = response.POST.get("price")
 
             # modification de la date de publication:
             date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
 
-            # Création de l'id
-            val_id = str(
-                generalIdCreationAndManagement(
-                    10, True, PermissionEnums.AA, genre, type_livre
-                )
-            )
+
+            print(WorkList.objects.filter(name_works=nom_livre))
+            print(WorkList.objects.filter(id_library=librarie_id))
+
+    
+
+            if WorkList.objects.filter(name_works=nom_livre).exists():
+                print('here')
+                livre_test = WorkList.objects.filter(name_works=nom_livre)
+
+                if livre_test.filter(id_library = librarie_id).exists():
+                    livres = WorkList.objects.filter(name_works = nom_livre, id_library = librarie_id)
+
+                    print('ok')
+                    # Prendre le livre avec le plus gros id
+                    liste_id = []
+                    for livre in livres: 
+                        liste_id.append(int(livre.id_works.split(' ')[4]))
+                    
+                    copy_num = max(liste_id) + 1
+                    livre_id_finale = livres[liste_id.index(copy_num-1)].id_works
+
+                    val_id = additionOfMultipleSameBooks(str(livre_id_finale))
+                
+                else: 
+                    copy_num, val_id = creation_id_default(librarie_id, genre, type_livre)
+                
+
+            else: 
+                copy_num, val_id = creation_id_default(librarie_id, genre, type_livre)
+
 
             # Création de l'objet
             livre = WorkList(
                 id_works=val_id,
-                id_library =int(10),
+                id_library = int(librarie_id),
                 name_works=str(nom_livre),
                 author_name=str(author_name),
                 publication_date=date_publication,
@@ -158,7 +195,7 @@ def create_item(response, liste_info):
                 genre=str(genre),
                 language=str(language),
                 state=int(etat),
-                copy_number=int(numero_copie),
+                copy_number= copy_num,
                 type_work=str(type_livre),
                 price=decimal.Decimal(price),
             )
