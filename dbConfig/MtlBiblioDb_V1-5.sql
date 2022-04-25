@@ -135,7 +135,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
   `ID_Works` VARCHAR(20) NOT NULL,
-  `Photo_Path_Work` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` 
+  `Photo_Path_Work` VARCHAR(255) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` 
     FOREIGN KEY (`ID_Works`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
     ON DELETE NO ACTION,
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
 )
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Photo_Path_Users` VARCHAR(MAX) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` 
+  `Photo_Path_Users` VARCHAR(255) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` 
   CONSTRAINT `fk_Media_List_ID_Users`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
