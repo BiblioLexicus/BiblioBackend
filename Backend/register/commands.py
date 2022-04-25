@@ -52,7 +52,7 @@ def creation_utilisateur(request):
                 email=email,
                 addresse_postale=adress,
                 expiration_subscription=expiration_subscription,
-                permissions="AA",  # Il faut changer cela pour une permission par defaut qui n'est pas Admin
+                permissions="OO",  # Il faut changer cela pour une permission par defaut qui n'est pas Admin
                 related_library_id="01",
             )  # Rajouter un input pour cette valeur
             user.save()

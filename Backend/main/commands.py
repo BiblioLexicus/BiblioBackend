@@ -148,6 +148,7 @@ def create_item(response, liste_info):
             # Création de l'objet
             livre = WorkList(
                 id_works=val_id,
+                id_library =int(10),
                 name_works=str(nom_livre),
                 author_name=str(author_name),
                 publication_date=date_publication,

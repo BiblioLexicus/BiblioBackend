@@ -1,6 +1,6 @@
 import math
 import random
-
+from .models import WorkList
 
 def intToid2Char(val_int):
     """

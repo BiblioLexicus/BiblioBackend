@@ -123,6 +123,9 @@ class WorkList(models.Model):
     id_works = models.CharField(
         db_column="ID_Works", primary_key=True, max_length=20
     )  # Field name made lowercase.
+    id_library = models.IntegerField(
+        db_column="ID_Library"
+    )
     name_works = models.CharField(
         db_column="Name_Works", max_length=50
     )  # Field name made lowercase.
