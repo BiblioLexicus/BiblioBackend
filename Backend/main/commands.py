@@ -3,6 +3,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
+from django.shortcuts import redirect
 
 from .IDEnums import *
 from .IDManagement import *
@@ -44,12 +45,7 @@ def search_emprunt(user_id):
     user = UserList.objects.filter(id_users=str(user_id))[0]
     liste_emprunts = LoanedWorks.objects.filter(id_users=user)
 
-    emprunts = []
-
-    for ouvrage in liste_emprunts:
-        emprunts.append(ouvrage.id_works)
-
-    return emprunts
+    return liste_emprunts
 
 
 def search_home(response):
@@ -108,9 +104,8 @@ def create_item(response, liste_info):
     """
     if response.method == "POST":
 
-        for (
-            info
-        ) in liste_info:  # Vérifie que tout les éléments ont une longeur d'au moins 3.
+        for info in liste_info:
+            # Vérifie que tout les éléments ont une longeur d'au moins 3.
             if (
                 len(str(response.POST.get(str(info)))) < 3
                 and info != "price"
@@ -148,7 +143,7 @@ def create_item(response, liste_info):
             # Création de l'objet
             livre = WorkList(
                 id_works=val_id,
-                id_library =int(10),
+                id_library=int(10),
                 name_works=str(nom_livre),
                 author_name=str(author_name),
                 publication_date=date_publication,
@@ -191,6 +186,52 @@ def edit_item(response, liste_info):
     """
     item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
 
-    """print(liste_info)
-    for info in liste_info:
-        setattr(item, info, info)"""
+    try:
+        nom_livre = response.POST.get("nomLivre")
+        author_name = response.POST.get("authorName")
+        date_publication = response.POST.get("datePublication")
+        edition_house = response.POST.get("editionHouse")
+        nombre_page = response.POST.get("nbrPage")
+        resume = response.POST.get("resume")
+        genre = response.POST["dropdown_genre"]
+        language = response.POST.get("language")
+
+        etat = response.POST["dropdown_etat"]
+
+        numero_copie = response.POST.get("numeroCopie")
+        type_livre = response.POST["dropdown_type"]
+        price = response.POST.get("price")
+
+        # modification de la date de publication:
+        date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
+
+        # Création de l'objet
+        item.name_works = str(nom_livre)
+        item.author_name = str(author_name)
+        item.publication_date = date_publication
+        item.edition_house = str(edition_house)
+        item.length = int(nombre_page)
+        item.resume = str(resume)
+        item.genre = str(genre)
+        item.language = str(language)
+        item.state = int(etat)
+        item.copy_number = int(numero_copie)
+        item.type_work = str(type_livre)
+        item.price = decimal.Decimal(price)
+    except Exception as e:
+        print(e)
+
+
+def get_user(response):
+    """
+    Cherche l'utilisateur depuis les cookies.
+
+    :param response: La requête.
+    :return: L'utilisateur.
+    """
+    try:
+        id_user = response.COOKIES["id_user"]
+    except KeyError:
+        return redirect("/")
+
+    return UserList.objects.filter(id_users=id_user)[0]
