@@ -45,7 +45,12 @@ def search_emprunt(user_id):
     user = UserList.objects.filter(id_users=str(user_id))[0]
     liste_emprunts = LoanedWorks.objects.filter(id_users=user)
 
-    return liste_emprunts
+    liste_final = []
+
+    for livre in liste_emprunts: # Permet de prendre le livre dans le loaned works et non le loaned works. 
+        liste_final.append(livre.id_works)
+
+    return liste_final
 
 
 def search_home(response):
@@ -208,6 +213,15 @@ def delete_item(response):
     :return:
     """
     id_delete = response.POST.get("id_work")  # Id du livre à delete
+
+    print(id_delete, type(id_delete))
+    book = WorkList.objects.filter(id_works=id_delete)[0]
+    
+
+    # Supprimer le loaned Work en premier. 
+    if LoanedWorks.objects.filter(id_works=book).exists(): 
+        LoanedWorks.objects.filter(id_works=book).delete()
+
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
 
 
