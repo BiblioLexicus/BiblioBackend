@@ -130,8 +130,7 @@ def administration(response):
 
         if response.POST.get("Modifier"):
             work = response.POST.get("id_work")
-            print(search_item_by_name(response), work)
-            edit_book = search_item_by_name(response)[0]
+            edit_book = search_item_by_name(str(WorkList.objects.filter(id_works=work)[0].name_works))[0]
             date_str = edit_book.publication_date.strftime("%Y-%m-%d")
             genre = str(WorkCategoryEnums[edit_book.genre].value)
             etat = str(

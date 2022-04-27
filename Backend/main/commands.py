@@ -74,8 +74,9 @@ def search_item_by_name(name: str) -> QuerySet:
     :param name:
     :return:
     """
-    list_items: QuerySet = WorkList.objects.all().filter(name_works=name)
-
+    list_items: QuerySet = WorkList.objects.filter(name_works=name)
+    print(QuerySet)
+    
     return list_items
 
 
@@ -86,7 +87,7 @@ def search_precise_item(item_id: str) -> QuerySet:
     :param item_id:
     :return:
     """
-    item = WorkList.objects.all().filter(id_works=item_id)
+    item = WorkList.objects.filter(id_works=item_id)
 
     return item
 
@@ -233,7 +234,7 @@ def edit_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
+    item: WorkList = search_precise_item(str(response.POST.get("id_edit_livre")))[0]
 
     try:
         nom_livre = response.POST.get("nomLivre")
@@ -267,6 +268,7 @@ def edit_item(response, liste_info):
         item.copy_number = int(numero_copie)
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
+        item.save()
     except Exception as e:
         print(e)
 
