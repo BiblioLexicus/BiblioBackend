@@ -118,6 +118,7 @@ def create_item(response, liste_info):
     :param liste_info:
     :return:
     """
+    
     if response.method == "POST":
 
         for info in liste_info:
@@ -129,7 +130,7 @@ def create_item(response, liste_info):
                 and info != "nbrPage"
             ):
                 return False  # Si il y a une erreur retourne False
-
+        
         try:
             nom_livre = response.POST.get("nomLivre")
             author_name = response.POST.get("authorName")
@@ -149,21 +150,18 @@ def create_item(response, liste_info):
             # modification de la date de publication:
             date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
 
-            print(WorkList.objects.filter(name_works=nom_livre))
-            print(WorkList.objects.filter(id_library=librarie_id))
-
-            if (WorkList.objects.filter(name_works=nom_livre).exists() and (WorkList.objects.filter(author_name=author_name).exists)
-             ):
-                print("here")
+            
+            if WorkList.objects.filter(name_works=nom_livre).exists():
+                
                 livre_test = WorkList.objects.filter(name_works=nom_livre)
 
-                if ((livre_test.filter(id_library=librarie_id).exists())):
-                    if (WorkList.objects.filter(author_name=author_name).exists):
+                if livre_test.filter(id_library=librarie_id).exists():
+                    if livre_test.filter(author_name=author_name).exists():
                         livres = WorkList.objects.filter(
-                        name_works=nom_livre, id_library=librarie_id
+                        name_works=nom_livre, id_library=librarie_id, author_name=author_name
                         )
 
-                        print("ok")
+
                         # Prendre le livre avec le plus gros id
                         liste_id = []
                         for livre in livres:
@@ -240,7 +238,7 @@ def edit_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
+    item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0] #C'est id_edit_livre et non id_work. Arrêtez de changer sa valeur je vous en supplie
 
     try:
         nom_livre = response.POST.get("nomLivre")
@@ -274,6 +272,7 @@ def edit_item(response, liste_info):
         item.copy_number = int(numero_copie)
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
+        item.save()
     except Exception as e:
         print(e)
 
