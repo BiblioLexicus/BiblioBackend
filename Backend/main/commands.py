@@ -74,9 +74,8 @@ def search_item_by_name(name: str) -> QuerySet:
     :param name:
     :return:
     """
-    list_items: QuerySet = WorkList.objects.filter(name_works=name)
-    print(QuerySet)
-    
+    list_items: QuerySet = WorkList.objects.all().filter(name_works=name)
+
     return list_items
 
 
@@ -87,7 +86,7 @@ def search_precise_item(item_id: str) -> QuerySet:
     :param item_id:
     :return:
     """
-    item = WorkList.objects.filter(id_works=item_id)
+    item = WorkList.objects.all().filter(id_works=item_id)
 
     return item
 
@@ -135,7 +134,7 @@ def create_item(response, liste_info):
             nom_livre = response.POST.get("nomLivre")
             author_name = response.POST.get("authorName")
             date_publication = response.POST.get("datePublication")
-            edition_house = response.POST.get("editionHouse")
+            edition_house = response.POST.get("editionr les nuls','House")
             nombre_page = response.POST.get("nbrPage")
             resume = response.POST.get("resume")
             genre = response.POST["dropdown_genre"]
@@ -153,25 +152,32 @@ def create_item(response, liste_info):
             print(WorkList.objects.filter(name_works=nom_livre))
             print(WorkList.objects.filter(id_library=librarie_id))
 
-            if WorkList.objects.filter(name_works=nom_livre).exists():
+            if (WorkList.objects.filter(name_works=nom_livre).exists() and (WorkList.objects.filter(author_name=author_name).exists)
+             ):
                 print("here")
                 livre_test = WorkList.objects.filter(name_works=nom_livre)
 
-                if livre_test.filter(id_library=librarie_id).exists():
-                    livres = WorkList.objects.filter(
+                if ((livre_test.filter(id_library=librarie_id).exists())):
+                    if (WorkList.objects.filter(author_name=author_name).exists):
+                        livres = WorkList.objects.filter(
                         name_works=nom_livre, id_library=librarie_id
+                        )
+
+                        print("ok")
+                        # Prendre le livre avec le plus gros id
+                        liste_id = []
+                        for livre in livres:
+                            liste_id.append(int(livre.id_works.split(" ")[4]))
+
+                        copy_num = max(liste_id) + 1
+                        livre_id_finale = livres[liste_id.index(copy_num - 1)].id_works
+
+                        val_id = additionOfMultipleSameBooks(str(livre_id_finale))
+
+                    else:
+                        copy_num, val_id = creation_id_default(
+                        librarie_id, genre, type_livre
                     )
-
-                    print("ok")
-                    # Prendre le livre avec le plus gros id
-                    liste_id = []
-                    for livre in livres:
-                        liste_id.append(int(livre.id_works.split(" ")[4]))
-
-                    copy_num = max(liste_id) + 1
-                    livre_id_finale = livres[liste_id.index(copy_num - 1)].id_works
-
-                    val_id = additionOfMultipleSameBooks(str(livre_id_finale))
 
                 else:
                     copy_num, val_id = creation_id_default(
@@ -234,7 +240,7 @@ def edit_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    item: WorkList = search_precise_item(str(response.POST.get("id_edit_livre")))[0]
+    item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
 
     try:
         nom_livre = response.POST.get("nomLivre")
@@ -268,7 +274,6 @@ def edit_item(response, liste_info):
         item.copy_number = int(numero_copie)
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
-        item.save()
     except Exception as e:
         print(e)
 

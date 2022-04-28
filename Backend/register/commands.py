@@ -37,7 +37,7 @@ def creation_utilisateur(request):
     # modification de la date de publication:
     date_naissance = datetime.strptime(date_naissance, "%Y-%m-%d")
     expiration_subscription = datetime.strptime("3000-12-12", "%Y-%m-%d")
-    user_id = generalIdCreationAndManagement(1, False, "AA", None, None)
+    user_id = generalIdCreationAndManagement(1, False, "OO", None, None)
     hashedPwd = make_password(str(passwordNotHash)) # Built-in django function to hash password 
     
     if not verification_existence(email):
