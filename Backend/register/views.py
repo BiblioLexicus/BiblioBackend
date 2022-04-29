@@ -63,15 +63,13 @@ def register(request):
     if request.method == "POST":
         if request.POST.get("inscription_btn"):
             creation = creation_utilisateur(request)
-
-            if creation:
-                response = render(
-                    request,
-                    "registration/register.html",
-                    {"creation": creation} | default_dict,
-                )
-                # response.set_cookie("is_logged", True)  Creation d'un cookie logged_in
-                # value_logged = request.COOKIES["is_logged"] pour avoir la valeur d'un cookie
+            response = render(
+                request,
+                "registration/register.html",
+                {"creation": creation} | default_dict,
+            )
+            # response.set_cookie("is_logged", True)  Creation d'un cookie logged_in
+            # value_logged = request.COOKIES["is_logged"] pour avoir la valeur d'un cookie
 
     return response
 

@@ -1,5 +1,7 @@
 import decimal
 from datetime import datetime
+import random
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
@@ -7,7 +9,40 @@ from django.shortcuts import redirect
 
 from .IDEnums import *
 from .IDManagement import *
-from .models import LoanedWorks, UserList, WorkList
+from .models import LoanedWorks, UserList, WorkList, Comments
+
+
+def voir_commentaire(response, item_id): 
+    """
+    Affiche les commentaires sur la page d'un item
+    """
+    try: 
+        livre = WorkList.objects.filter(id_works=str(item_id))[0]
+        list_commentaires = Comments.objects.filter(id_works=livre)
+        return list_commentaires
+
+    except: 
+        return []
+    
+
+def ajouter_commentaire(response): 
+    """
+    Ajouter un item
+    """
+    if len(str(response.POST.get("ecritureComm"))) > 1:
+        try: 
+            user_id = response.COOKIES["id_user"]
+
+            new_comm = Comments(
+                id_comments = int( int(user_id.split(" ")[0]) + random.randrange(0, 2147483646)),
+                id_works = WorkList.objects.filter(id_works=response.POST.get("id_work"))[0], 
+                id_users = UserList.objects.filter(id_users=str(user_id))[0],  
+                release_date = date.today(), 
+                comment_text = str(response.POST.get("ecritureComm"))
+            )
+            new_comm.save()
+        except: 
+            return False
 
 
 def emprunter(response):
@@ -227,6 +262,11 @@ def delete_item(response):
     if LoanedWorks.objects.filter(id_works=book).exists(): 
         LoanedWorks.objects.filter(id_works=book).delete()
 
+    if Comments.objects.filter(id_works=book).exists():
+        liste_commentaires = Comments.objects.filter(id_works=book)
+        for commentaire in liste_commentaires: 
+            commentaire.delete()
+
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
 
 
@@ -252,7 +292,7 @@ def edit_item(response, liste_info):
 
         etat = response.POST["dropdown_etat"]
 
-        numero_copie = response.POST.get("numeroCopie")
+        librairie = response.POST.get("numeroCopie")
         type_livre = response.POST["dropdown_type"]
         price = response.POST.get("price")
 
@@ -261,6 +301,7 @@ def edit_item(response, liste_info):
 
         # Création de l'objet
         item.name_works = str(nom_livre)
+        item.id_library = int(librairie)
         item.author_name = str(author_name)
         item.publication_date = date_publication
         item.edition_house = str(edition_house)
@@ -269,7 +310,6 @@ def edit_item(response, liste_info):
         item.genre = str(genre)
         item.language = str(language)
         item.state = int(etat)
-        item.copy_number = int(numero_copie)
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
         item.save()

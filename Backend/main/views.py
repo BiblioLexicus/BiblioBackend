@@ -68,11 +68,24 @@ def item(response, item_id):
         if response.GET.get("emprunt"):
             if response.COOKIES["is_logged"] == "True":
                 state_of_emprunt = emprunter(response)
+    
+    if response.method == "POST": # Ajout d'un commentaire
+        if response.POST.get("commSave"): 
+            ajouter_commentaire(response)
 
+    liste_commentaires = voir_commentaire(response, item_id)   
+    liste_users = []
+
+    for com in liste_commentaires: 
+        user = com.id_users
+        tuple_comms = (user.name, com)
+        liste_users.append(tuple_comms)
+
+    print(liste_users)
     return render(
         response,
         "main/item.html",
-        {"livre": info_livre, "state_of_emprunt": state_of_emprunt} | default_dict,
+        {"livre": info_livre, "state_of_emprunt": state_of_emprunt, "list_user": liste_users} | default_dict,
     )
 
 
