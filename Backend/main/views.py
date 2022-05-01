@@ -68,15 +68,15 @@ def item(response, item_id):
         if response.GET.get("emprunt"):
             if response.COOKIES["is_logged"] == "True":
                 state_of_emprunt = emprunter(response)
-    
-    if response.method == "POST": # Ajout d'un commentaire
-        if response.POST.get("commSave"): 
+
+    if response.method == "POST":  # Ajout d'un commentaire
+        if response.POST.get("commSave"):
             ajouter_commentaire(response)
 
-    liste_commentaires = voir_commentaire(response, item_id)   
+    liste_commentaires = voir_commentaire(response, item_id)
     liste_users = []
 
-    for com in liste_commentaires: 
+    for com in liste_commentaires:
         user = com.id_users
         tuple_comms = (user.name, com)
         liste_users.append(tuple_comms)
@@ -85,7 +85,12 @@ def item(response, item_id):
     return render(
         response,
         "main/item.html",
-        {"livre": info_livre, "state_of_emprunt": state_of_emprunt, "list_user": liste_users} | default_dict,
+        {
+            "livre": info_livre,
+            "state_of_emprunt": state_of_emprunt,
+            "list_user": liste_users,
+        }
+        | default_dict,
     )
 
 
@@ -100,8 +105,11 @@ def administration(response):
         id_user = response.COOKIES["id_user"]
     except KeyError:
         return redirect("/")  # L'utilisateur n'est pas connecté
-    if (
-        UserList.objects.filter(id_users=id_user)[0].permissions != "AA"
+
+    user = UserList.objects.filter(id_users=id_user)
+
+    if (user.exists() and user[0].permissions != "AA") or (
+        not user.exists()
     ):  # verifie que l'utilisateur est admin
         return redirect("/")
 
@@ -143,7 +151,9 @@ def administration(response):
 
         if response.POST.get("Modifier"):
             work = response.POST.get("id_work")
-            edit_book = search_item_by_name(str(WorkList.objects.filter(id_works=work)[0].name_works))[0]
+            edit_book = search_precise_item(
+                str(work)
+            )[0]
             date_str = edit_book.publication_date.strftime("%Y-%m-%d")
             genre = str(WorkCategoryEnums[edit_book.genre].value)
             etat = str(
