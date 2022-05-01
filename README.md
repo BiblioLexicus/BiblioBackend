@@ -20,14 +20,23 @@ Used technologies in this project
 
 ## Instruction d'installation
 
-Install dependencies with `poetry install` (`pip install poetry`)
 
-Install hooks:
+Installer les dépendances avec `poetry install`
+- Si nécessaire, installer Poetry avec bash: 
+```
+curl -sSL https://install.python-poetry.org | python3 -
+```
+- Si nécessaire, installer Poetry avec Powershell: 
+```
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+```
+- Crochets d'installation:
 ```
 poetry run pre-commit install -t=pre-commit -t=pre-push
 ```
 
-Install any new dependancy with `poetry add <package>`
+Installer toute nouvelle dépendance avec `poetry add <package>`
+
 
 ## Usages
 
