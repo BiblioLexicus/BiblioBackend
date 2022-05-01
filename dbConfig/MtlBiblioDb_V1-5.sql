@@ -13,7 +13,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `BiblioLexicusDB` DEFAULT CHARACTER SET utf8 ;
 USE `BiblioLexicusDB` ;
-
 -- -----------------------------------------------------
 -- Table `BiblioLexicusDB`.`Work_List`
 -- -----------------------------------------------------
@@ -135,21 +134,26 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
   `ID_Works` VARCHAR(20) NOT NULL,
-  `Photo_Path_Work` VARCHAR(255) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg` 
+  `Photo_Path_Work` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg',
+  INDEX `fk_Media_Work_List1_idx` (`ID_Works` ASC) VISIBLE,
+  CONSTRAINT `fk_Media_Work_List1`
     FOREIGN KEY (`ID_Works`)
     REFERENCES `BiblioLexicusDB`.`Work_List` (`ID_Works`)
-    ON DELETE NO ACTION,
-    ON UPDATE CASCADE,
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 )
+ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Photo_Path_Users` VARCHAR(255) DEFAULT `https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png` 
-  CONSTRAINT `fk_Media_List_ID_Users`
+  `Photo_Path_Users` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.pnghttps://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png',
+  INDEX `fk_Media_Users_List1_idx` (`ID_Users` ASC) VISIBLE,
+  CONSTRAINT `fk_Media_Users_List1`
     FOREIGN KEY (`ID_Users`)
     REFERENCES `BiblioLexicusDB`.`User_List` (`ID_Users`)
-    ON DELETE NO ACTION,
-    ON UPDATE CASCADE,
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 )
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

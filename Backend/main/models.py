@@ -167,7 +167,7 @@ class WorkList(models.Model):
         managed = True
         db_table = "Work_List"
 
-
+"""
 class Work_Media_List(models.Model):
     id_works = models.ForeignKey(
         "WorkList", on_delete=models.CASCADE, db_column="ID_Works"
@@ -176,6 +176,9 @@ class Work_Media_List(models.Model):
         max_length=10000,
         default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg",
     )
+    class Meta:
+        managed = True
+        db_table = "Work_Media_List"
 
 
 class User_Media_List(models.Model):
@@ -186,3 +189,22 @@ class User_Media_List(models.Model):
         max_length=10000,
         default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png",
     )
+    class Meta:
+        managed = True
+        db_table = "User_Media_List"""
+
+class WorkMediaList(models.Model):
+    id_works = models.ForeignKey(WorkList, models.DO_NOTHING, db_column='ID_Works')  # Field name made lowercase.
+    photo_path_work = models.CharField(db_column='Photo_Path_Work', max_length=255, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Work_Media_List'
+        
+class UserMediaList(models.Model):
+    id_users = models.ForeignKey(UserList, models.DO_NOTHING, db_column='ID_Users')  # Field name made lowercase.
+    photo_path_users = models.CharField(db_column='Photo_Path_Users', max_length=255, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'User_Media_List'

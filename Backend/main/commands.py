@@ -1,12 +1,48 @@
 import decimal
 from datetime import datetime
+import random
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
+from django.shortcuts import redirect
 
 from .IDEnums import *
 from .IDManagement import *
-from .models import LoanedWorks, UserList, WorkList
+from .models import LoanedWorks, UserList, WorkList, Comments
+
+
+def voir_commentaire(response, item_id): 
+    """
+    Affiche les commentaires sur la page d'un item
+    """
+    try: 
+        livre = WorkList.objects.filter(id_works=str(item_id))[0]
+        list_commentaires = Comments.objects.filter(id_works=livre)
+        return list_commentaires
+
+    except: 
+        return []
+    
+
+def ajouter_commentaire(response): 
+    """
+    Ajouter un item
+    """
+    if len(str(response.POST.get("ecritureComm"))) > 1:
+        try: 
+            user_id = response.COOKIES["id_user"]
+
+            new_comm = Comments(
+                id_comments = int( int(user_id.split(" ")[0]) + random.randrange(0, 2147483646)),
+                id_works = WorkList.objects.filter(id_works=response.POST.get("id_work"))[0], 
+                id_users = UserList.objects.filter(id_users=str(user_id))[0],  
+                release_date = date.today(), 
+                comment_text = str(response.POST.get("ecritureComm"))
+            )
+            new_comm.save()
+        except: 
+            return False
 
 
 def emprunter(response):
@@ -44,12 +80,12 @@ def search_emprunt(user_id):
     user = UserList.objects.filter(id_users=str(user_id))[0]
     liste_emprunts = LoanedWorks.objects.filter(id_users=user)
 
-    emprunts = []
+    liste_final = []
 
-    for ouvrage in liste_emprunts:
-        emprunts.append(ouvrage.id_works)
+    for livre in liste_emprunts: # Permet de prendre le livre dans le loaned works et non le loaned works. 
+        liste_final.append(livre.id_works)
 
-    return emprunts
+    return liste_final
 
 
 def search_home(response):
@@ -98,6 +134,17 @@ def administration_search(query):
     return recherche
 
 
+def creation_id_default(librarie_id, genre, type_livre):
+    copy_num = 1
+    # Création de l'id
+    val_id = str(
+        generalIdCreationAndManagement(
+            int(librarie_id), True, PermissionEnums.AA, genre, type_livre
+        )
+    )
+    return copy_num, val_id
+
+
 def create_item(response, liste_info):
     """
     Crée un item. Retourne True si l'item a été créé, False si l'item n'a pas pu être créé.
@@ -106,11 +153,11 @@ def create_item(response, liste_info):
     :param liste_info:
     :return:
     """
+    
     if response.method == "POST":
 
-        for (
-            info
-        ) in liste_info:  # Vérifie que tout les éléments ont une longeur d'au moins 3.
+        for info in liste_info:
+            # Vérifie que tout les éléments ont une longeur d'au moins 3.
             if (
                 len(str(response.POST.get(str(info)))) < 3
                 and info != "price"
@@ -118,12 +165,12 @@ def create_item(response, liste_info):
                 and info != "nbrPage"
             ):
                 return False  # Si il y a une erreur retourne False
-
+        
         try:
             nom_livre = response.POST.get("nomLivre")
             author_name = response.POST.get("authorName")
             date_publication = response.POST.get("datePublication")
-            edition_house = response.POST.get("editionHouse")
+            edition_house = response.POST.get("editionr les nuls','House")
             nombre_page = response.POST.get("nbrPage")
             resume = response.POST.get("resume")
             genre = response.POST["dropdown_genre"]
@@ -131,24 +178,52 @@ def create_item(response, liste_info):
 
             etat = response.POST["dropdown_etat"]
 
-            numero_copie = response.POST.get("numeroCopie")
+            librarie_id = response.POST.get("numeroCopie")
             type_livre = response.POST["dropdown_type"]
             price = response.POST.get("price")
 
             # modification de la date de publication:
             date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
 
-            # Création de l'id
-            val_id = str(
-                generalIdCreationAndManagement(
-                    10, True, PermissionEnums.AA, genre, type_livre
-                )
-            )
+            
+            if WorkList.objects.filter(name_works=nom_livre).exists():
+                
+                livre_test = WorkList.objects.filter(name_works=nom_livre)
+
+                if livre_test.filter(id_library=librarie_id).exists():
+                    if livre_test.filter(author_name=author_name).exists():
+                        livres = WorkList.objects.filter(
+                        name_works=nom_livre, id_library=librarie_id, author_name=author_name
+                        )
+
+
+                        # Prendre le livre avec le plus gros id
+                        liste_id = []
+                        for livre in livres:
+                            liste_id.append(int(livre.id_works.split(" ")[4]))
+
+                        copy_num = max(liste_id) + 1
+                        livre_id_finale = livres[liste_id.index(copy_num - 1)].id_works
+
+                        val_id = additionOfMultipleSameBooks(str(livre_id_finale))
+
+                    else:
+                        copy_num, val_id = creation_id_default(
+                        librarie_id, genre, type_livre
+                    )
+
+                else:
+                    copy_num, val_id = creation_id_default(
+                        librarie_id, genre, type_livre
+                    )
+
+            else:
+                copy_num, val_id = creation_id_default(librarie_id, genre, type_livre)
 
             # Création de l'objet
             livre = WorkList(
                 id_works=val_id,
-                id_library =int(10),
+                id_library=int(librarie_id),
                 name_works=str(nom_livre),
                 author_name=str(author_name),
                 publication_date=date_publication,
@@ -158,7 +233,7 @@ def create_item(response, liste_info):
                 genre=str(genre),
                 language=str(language),
                 state=int(etat),
-                copy_number=int(numero_copie),
+                copy_number=copy_num,
                 type_work=str(type_livre),
                 price=decimal.Decimal(price),
             )
@@ -178,6 +253,20 @@ def delete_item(response):
     :return:
     """
     id_delete = response.POST.get("id_work")  # Id du livre à delete
+
+    print(id_delete, type(id_delete))
+    book = WorkList.objects.filter(id_works=id_delete)[0]
+    
+
+    # Supprimer le loaned Work en premier. 
+    if LoanedWorks.objects.filter(id_works=book).exists(): 
+        LoanedWorks.objects.filter(id_works=book).delete()
+
+    if Comments.objects.filter(id_works=book).exists():
+        liste_commentaires = Comments.objects.filter(id_works=book)
+        for commentaire in liste_commentaires: 
+            commentaire.delete()
+
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
 
 
@@ -189,8 +278,55 @@ def edit_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    item: WorkList = search_precise_item(response.POST.get("id_work"))[0]
+    item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0] #C'est id_edit_livre et non id_work. Arrêtez de changer sa valeur je vous en supplie
 
-    """print(liste_info)
-    for info in liste_info:
-        setattr(item, info, info)"""
+    try:
+        nom_livre = response.POST.get("nomLivre")
+        author_name = response.POST.get("authorName")
+        date_publication = response.POST.get("datePublication")
+        edition_house = response.POST.get("editionHouse")
+        nombre_page = response.POST.get("nbrPage")
+        resume = response.POST.get("resume")
+        genre = response.POST["dropdown_genre"]
+        language = response.POST.get("language")
+
+        etat = response.POST["dropdown_etat"]
+
+        librairie = response.POST.get("numeroCopie")
+        type_livre = response.POST["dropdown_type"]
+        price = response.POST.get("price")
+
+        # modification de la date de publication:
+        date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
+
+        # Création de l'objet
+        item.name_works = str(nom_livre)
+        item.id_library = int(librairie)
+        item.author_name = str(author_name)
+        item.publication_date = date_publication
+        item.edition_house = str(edition_house)
+        item.length = int(nombre_page)
+        item.resume = str(resume)
+        item.genre = str(genre)
+        item.language = str(language)
+        item.state = int(etat)
+        item.type_work = str(type_livre)
+        item.price = decimal.Decimal(price)
+        item.save()
+    except Exception as e:
+        print(e)
+
+
+def get_user(response):
+    """
+    Cherche l'utilisateur depuis les cookies.
+
+    :param response: La requête.
+    :return: L'utilisateur.
+    """
+    try:
+        id_user = response.COOKIES["id_user"]
+    except KeyError:
+        return redirect("/")
+
+    return UserList.objects.filter(id_users=id_user)[0]

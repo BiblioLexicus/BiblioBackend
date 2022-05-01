@@ -6,8 +6,12 @@ from django.utils.html import escape
 
 from .commands import *
 from .IDEnums import *
+from .models import LibrariesData
 
-default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
+default_dict = {
+    "organisation_name": os.getenv("ORGANISATION_NAME"),
+    "libraries": LibrariesData.objects.all(),
+}
 organisation_name = os.getenv("ORGANISATION_NAME")
 
 
@@ -65,10 +69,28 @@ def item(response, item_id):
             if response.COOKIES["is_logged"] == "True":
                 state_of_emprunt = emprunter(response)
 
+    if response.method == "POST":  # Ajout d'un commentaire
+        if response.POST.get("commSave"):
+            ajouter_commentaire(response)
+
+    liste_commentaires = voir_commentaire(response, item_id)
+    liste_users = []
+
+    for com in liste_commentaires:
+        user = com.id_users
+        tuple_comms = (user.name, com)
+        liste_users.append(tuple_comms)
+
+    print(liste_users)
     return render(
         response,
         "main/item.html",
-        {"livre": info_livre, "state_of_emprunt": state_of_emprunt} | default_dict,
+        {
+            "livre": info_livre,
+            "state_of_emprunt": state_of_emprunt,
+            "list_user": liste_users,
+        }
+        | default_dict,
     )
 
 
@@ -79,11 +101,15 @@ def administration(response):
     :param response:
     :return:
     """
+    try:
+        id_user = response.COOKIES["id_user"]
+    except KeyError:
+        return redirect("/")  # L'utilisateur n'est pas connecté
 
-    id_user = response.COOKIES["id_user"]
+    user = UserList.objects.filter(id_users=id_user)
 
-    if (
-        UserList.objects.filter(id_users=id_user)[0].permissions != "AA"
+    if (user.exists() and user[0].permissions != "AA") or (
+        not user.exists()
     ):  # verifie que l'utilisateur est admin
         return redirect("/")
 
@@ -124,7 +150,10 @@ def administration(response):
             delete_item(response)
 
         if response.POST.get("Modifier"):
-            edit_book = search_item_by_name(response)[0]
+            work = response.POST.get("id_work")
+            edit_book = search_precise_item(
+                str(work)
+            )[0]
             date_str = edit_book.publication_date.strftime("%Y-%m-%d")
             genre = str(WorkCategoryEnums[edit_book.genre].value)
             etat = str(
@@ -199,52 +228,46 @@ def panier(response):
     :param response:
     :return:
     """
-
-    liste_emprunts = ["livre 1", "livre 2", "livre 3"]
+    user = get_user(response)
+    liste_emprunts = LoanedWorks.objects.filter(id_users=user.id_users)
 
     return render(
         response, "main/panier.html", {"liste_emprunts": liste_emprunts} | default_dict
     )
 
 
-def librairie(response, library_id):
+def librairie(response, library_id: str):
     """
-    TODO
+    Point d'entrée pour visionner les informations à propos d'une librairie.
 
-    :param response:
-    :param library_id:
-    :return:
+    :param response: Requête de l'utilisateur.
+    :param library_id: L'ID de la librairie.
+    :return: Les informations à propos d'une librairie.
     """
-
-    librairie_nom = "Bibliothèque de Montreal"
-    adresse = "rue de montreal"
-    heures_ouverture = "8am à 9pm"
+    library_id = escape(library_id)
+    libr = LibrariesData.objects.filter(id_library=library_id)[0]
 
     return render(
         response,
         "main/librairie.html",
-        {
-            "librairie_nom": librairie_nom,
-            "adresse": adresse,
-            "heures_ouverture": heures_ouverture,
-        }
-        | default_dict,
+        {"libr": libr} | default_dict,
     )
 
 
 def settings(response):
     """
-    TODO
+    Page de paramètres de l'utilisateur.
 
-    :param response:
-    :return:
+    :param response: La requête.
+    :return: La page de paramètres de l'utilisateur.
     """
-    user = {
-        "name": "Jean-jacques",
-        "email": "jean@jacques.a",
-        "postalCode": "AAA334",
-        "imagelink": "",
-    }
+    try:
+        id_user = response.COOKIES["id_user"]
+    except KeyError:
+        return redirect("/")
+
+    user = UserList.objects.filter(id_users=id_user)[0]
+
     lst_genre = [genre.value for genre in WorkTypeEnum]
     return render(
         response,

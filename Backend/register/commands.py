@@ -25,20 +25,28 @@ def creation_utilisateur(request):
     :param request:
     :return:
     """
-    # Vérifier que l'utilisateur est unique...
 
-    name = request.POST.get("nom")
-    prenom = request.POST.get("prenom")
-    date_naissance = request.POST.get("dateNaissance")
-    email = request.POST.get("email")
-    passwordNotHash = request.POST.get("mdp")
-    adress = request.POST.get("address")
+    list_param = ['nom', 'prenom', 'dateNaissance', 'email', 'mdp', 'address']
 
-    # modification de la date de publication:
-    date_naissance = datetime.strptime(date_naissance, "%Y-%m-%d")
-    expiration_subscription = datetime.strptime("3000-12-12", "%Y-%m-%d")
-    user_id = generalIdCreationAndManagement(1, False, "AA", None, None)
-    hashedPwd = make_password(str(passwordNotHash)) # Built-in django function to hash password 
+    # Check si tout est au moins de longeur 3. 
+    for param in list_param:
+        if len(request.POST.get(str(param))) < 3: 
+            return False
+    try: 
+        name = request.POST.get("nom")
+        prenom = request.POST.get("prenom")
+        date_naissance = request.POST.get("dateNaissance")
+        email = request.POST.get("email")
+        passwordNotHash = request.POST.get("mdp")
+        adress = request.POST.get("address")
+
+        # modification de la date de publication:
+        date_naissance = datetime.strptime(date_naissance, "%Y-%m-%d")
+        expiration_subscription = datetime.strptime("3000-12-12", "%Y-%m-%d")
+        user_id = generalIdCreationAndManagement(1, False, "OO", None, None)
+        hashedPwd = make_password(str(passwordNotHash)) # Built-in django function to hash password 
+    except: 
+        return False
     
     if not verification_existence(email):
         try:
