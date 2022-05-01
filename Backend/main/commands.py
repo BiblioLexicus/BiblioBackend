@@ -1,7 +1,6 @@
 import decimal
-from datetime import datetime
 import random
-from datetime import date
+from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
@@ -9,39 +8,43 @@ from django.shortcuts import redirect
 
 from .IDEnums import *
 from .IDManagement import *
-from .models import LoanedWorks, UserList, WorkList, Comments
+from .models import Comments, LoanedWorks, UserList, WorkList
 
 
-def voir_commentaire(response, item_id): 
+def voir_commentaire(response, item_id):
     """
     Affiche les commentaires sur la page d'un item
     """
-    try: 
+    try:
         livre = WorkList.objects.filter(id_works=str(item_id))[0]
         list_commentaires = Comments.objects.filter(id_works=livre)
         return list_commentaires
 
-    except: 
+    except:
         return []
-    
 
-def ajouter_commentaire(response): 
+
+def ajouter_commentaire(response):
     """
     Ajouter un item
     """
     if len(str(response.POST.get("ecritureComm"))) > 1:
-        try: 
+        try:
             user_id = response.COOKIES["id_user"]
 
             new_comm = Comments(
-                id_comments = int( int(user_id.split(" ")[0]) + random.randrange(0, 2147483646)),
-                id_works = WorkList.objects.filter(id_works=response.POST.get("id_work"))[0], 
-                id_users = UserList.objects.filter(id_users=str(user_id))[0],  
-                release_date = date.today(), 
-                comment_text = str(response.POST.get("ecritureComm"))
+                id_comments=int(
+                    int(user_id.split(" ")[0]) + random.randrange(0, 2147483646)
+                ),
+                id_works=WorkList.objects.filter(id_works=response.POST.get("id_work"))[
+                    0
+                ],
+                id_users=UserList.objects.filter(id_users=str(user_id))[0],
+                release_date=date.today(),
+                comment_text=str(response.POST.get("ecritureComm")),
             )
             new_comm.save()
-        except: 
+        except:
             return False
 
 
@@ -82,7 +85,11 @@ def search_emprunt(user_id):
 
     liste_final = []
 
-    for livre in liste_emprunts: # Permet de prendre le livre dans le loaned works et non le loaned works. 
+    for (
+        livre
+    ) in (
+        liste_emprunts
+    ):  # Permet de prendre le livre dans le loaned works et non le loaned works.
         liste_final.append(livre.id_works)
 
     return liste_final
@@ -90,7 +97,7 @@ def search_emprunt(user_id):
 
 def search_home(response):
     """
-    recherche dans la page d'Acceuil????
+    recherche dans la page d'Accueil????
 
     :param response:
     :return:
@@ -153,7 +160,7 @@ def create_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    
+
     if response.method == "POST":
 
         for info in liste_info:
@@ -165,7 +172,7 @@ def create_item(response, liste_info):
                 and info != "nbrPage"
             ):
                 return False  # Si il y a une erreur retourne False
-        
+
         try:
             nom_livre = response.POST.get("nomLivre")
             author_name = response.POST.get("authorName")
@@ -185,17 +192,17 @@ def create_item(response, liste_info):
             # modification de la date de publication:
             date_publication = datetime.strptime(date_publication, "%Y-%m-%d")
 
-            
             if WorkList.objects.filter(name_works=nom_livre).exists():
-                
+
                 livre_test = WorkList.objects.filter(name_works=nom_livre)
 
                 if livre_test.filter(id_library=librarie_id).exists():
                     if livre_test.filter(author_name=author_name).exists():
                         livres = WorkList.objects.filter(
-                        name_works=nom_livre, id_library=librarie_id, author_name=author_name
+                            name_works=nom_livre,
+                            id_library=librarie_id,
+                            author_name=author_name,
                         )
-
 
                         # Prendre le livre avec le plus gros id
                         liste_id = []
@@ -209,8 +216,8 @@ def create_item(response, liste_info):
 
                     else:
                         copy_num, val_id = creation_id_default(
-                        librarie_id, genre, type_livre
-                    )
+                            librarie_id, genre, type_livre
+                        )
 
                 else:
                     copy_num, val_id = creation_id_default(
@@ -256,15 +263,14 @@ def delete_item(response):
 
     print(id_delete, type(id_delete))
     book = WorkList.objects.filter(id_works=id_delete)[0]
-    
 
-    # Supprimer le loaned Work en premier. 
-    if LoanedWorks.objects.filter(id_works=book).exists(): 
+    # Supprimer le loaned Work en premier.
+    if LoanedWorks.objects.filter(id_works=book).exists():
         LoanedWorks.objects.filter(id_works=book).delete()
 
     if Comments.objects.filter(id_works=book).exists():
         liste_commentaires = Comments.objects.filter(id_works=book)
-        for commentaire in liste_commentaires: 
+        for commentaire in liste_commentaires:
             commentaire.delete()
 
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
@@ -278,7 +284,8 @@ def edit_item(response, liste_info):
     :param liste_info:
     :return:
     """
-    item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0] #C'est id_edit_livre et non id_work. Arrêtez de changer sa valeur je vous en supplie
+    # Ici "id_edit_livre" et non "id_edit"
+    item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0]
 
     try:
         nom_livre = response.POST.get("nomLivre")
