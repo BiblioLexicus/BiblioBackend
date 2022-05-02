@@ -14,6 +14,12 @@ from .models import Comments, LoanedWorks, UserList, WorkList, WorkMediaList
 def voir_commentaire(response, item_id):
     """
     Affiche les commentaires sur la page d'un item
+
+    :param item_id: ID de l'item pour lequel nous voulons avoir les commentaires
+    :type item_id: int
+
+    :returns: une liste contenant des objets de commentaires
+    :rtype: list
     """
     try:
         livre = WorkList.objects.filter(id_works=str(item_id))[0]
@@ -26,7 +32,13 @@ def voir_commentaire(response, item_id):
 
 def ajouter_commentaire(response):
     """
-    Ajouter un item
+    Ajouter un commentaire
+
+    :param response: Requete DJANGO
+    :type response: requete POST 
+
+    :returns: Retourne rien si le livre est créé et retourne False si il y a une erreur
+    :rtype: bool
     """
     if len(str(response.POST.get("ecritureComm"))) > 1:
         try:
@@ -52,8 +64,11 @@ def emprunter(response):
     """
     Emprunter un item.
 
-    :param response:
-    :return:
+    :param response: Requete Django
+    :type response: Requete POST 
+
+    :return: True si l'objet est emprunter; False si l'objet n'est pas emprunté
+    :rtype: bool
     """
     user_id = response.COOKIES["id_user"]
     user = UserList.objects.filter(id_users=user_id)[0]
@@ -77,8 +92,11 @@ def search_emprunt(user_id):
     """
     Trouve les items qui ont été empruntés par un utilisateur
 
-    :param user_id:
-    :return:
+    :param user_id: ID de l'utilisateur
+    :type user_id: str
+
+    :return: liste de livre emprunté
+    :rtype: list
     """
     user = UserList.objects.filter(id_users=str(user_id))[0]
     liste_emprunts = LoanedWorks.objects.filter(id_users=user)
@@ -97,10 +115,10 @@ def search_emprunt(user_id):
 
 def search_home(response):
     """
-    recherche dans la page d'Accueil????
+    recherche dans la page d'Accueil
 
-    :param response:
-    :return:
+    :param response: requete Django
+    :return: empty str
     """
     if response.method == "GET":
         if response.GET.get("search"):
@@ -111,10 +129,10 @@ def search_home(response):
 
 def search_item_by_name(name: str) -> QuerySet:
     """
-    Cherche l'item.
+    Cherche l'item avec son nom
 
-    :param name:
-    :return:
+    :param name: Nom du livre recherché
+    :return: liste de livres trouvés à l'aide du nom
     """
     list_items: QuerySet = WorkList.objects.all().filter(name_works=name)
 
@@ -125,8 +143,8 @@ def search_precise_item(item_id: str) -> QuerySet:
     """
     Cherche un item précis par son ID.
 
-    :param item_id:
-    :return:
+    :param item_id: ID du livre recherché
+    :return: liste de livres trouvé à l'aide de l'ID
     """
     item = WorkList.objects.all().filter(id_works=item_id)
 
@@ -135,6 +153,12 @@ def search_precise_item(item_id: str) -> QuerySet:
 
 # Fonction qui sert a faire la recherche dans la page d'administration
 def administration_search(query):
+    """
+    Recherche dans la page d'administration
+
+    :param query: Nom du livre recherché
+    :return: liste de livres trouvé à l'aide de la query
+    """
     # faire en sorte de passer des parametres ex: User: <username>, Ouvrage: <Nom ouvrage>
     recherche = WorkList.objects.all().filter(name_works=query)
 
@@ -142,6 +166,15 @@ def administration_search(query):
 
 
 def creation_id_default(librarie_id, genre, type_livre):
+    """
+    Creation de l'ID de livre par défaut
+
+    :param librairie_id: ID de la librairie
+    :param genre: genre du livre
+    :type_livre: type du livre
+
+    :returns: Retourne numero de copie du livre ainsi que son ID.
+    """
     copy_num = 1
     # Création de l'id
     val_id = str(
@@ -156,9 +189,9 @@ def create_item(response, liste_info):
     """
     Crée un item. Retourne True si l'item a été créé, False si l'item n'a pas pu être créé.
 
-    :param response:
-    :param liste_info:
-    :return:
+    :param response: requete Django
+    :param liste_info: liste d'information sur le livre
+    :return: True si livre est créé, False si erreur
     """
 
     if response.method == "POST":
@@ -257,10 +290,10 @@ def create_item(response, liste_info):
 
 def delete_item(response):
     """
-    Delete an item.
+    Delete un item.
 
-    :param response:
-    :return:
+    :param response: requete Django
+    :return: None
     """
     id_delete = response.POST.get("id_work")  # Id du livre à delete
 
@@ -283,9 +316,9 @@ def edit_item(response, liste_info):
     """
     Edit an item. TODO come back here to update all values of the item
 
-    :param response:
-    :param liste_info:
-    :return:
+    :param response: requete Django
+    :param liste_info: liste d'information du livre
+    :return: None
     """
     # Ici "id_edit_livre" et non "id_edit"
     item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0]
