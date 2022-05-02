@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 
 from .IDEnums import *
 from .IDManagement import *
-from .models import Comments, LoanedWorks, UserList, WorkList
+from .models import Comments, LoanedWorks, UserList, WorkList, WorkMediaList
 
 
 def voir_commentaire(response, item_id):
@@ -245,6 +245,9 @@ def create_item(response, liste_info):
                 price=decimal.Decimal(price),
             )
             livre.save()  # Enregistrement de l'objet
+
+            w = WorkMediaList(id_works=livre, photo_path_work=str(response.POST.get('work_media')))
+            w.save()
             print("livre créé")
             return True  # Retourne True si il le livre est créé.
         except Exception as e:
@@ -286,6 +289,7 @@ def edit_item(response, liste_info):
     """
     # Ici "id_edit_livre" et non "id_edit"
     item: WorkList = search_precise_item(response.POST.get("id_edit_livre"))[0]
+    work_media = WorkMediaList.objects.filter(id_works=item)[0]
 
     try:
         nom_livre = response.POST.get("nomLivre")
@@ -320,6 +324,8 @@ def edit_item(response, liste_info):
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
         item.save()
+        work_media.photo_path_work = str(response.POST.get('work_media'))
+        work_media.save()
     except Exception as e:
         print(e)
 
