@@ -4,10 +4,10 @@ import random
 
 def intToid2Char(val_int):
     """
-    ???
+    permet de convertire un nombre en base 32
 
-    :param val_int:
-    :return:
+    :param val_int: nombre à convertire
+    :return: nombre convertie en base 32
     """
     convertion_tab = {
         10: "a",
@@ -104,10 +104,11 @@ def generalIdCreationAndManagement(
 
 def additionOfMultipleSameBooks(last_object_id: str):
     """
-    ???
+    Permet d'ajouter une copie d'un livre déjà existant sans créer un nouvel ID
+    en ajoutant le numéro du copie à la fin de l'ID
 
-    :param last_object_id:
-    :return:
+    :param last_object_id: l'ID du dernier copie du livre
+    :return: l'ID de la nouvelle copie
     """
 
     this_id = last_object_id.split()
