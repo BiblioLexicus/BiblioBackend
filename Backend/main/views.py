@@ -186,6 +186,7 @@ def administration(response):
             are_we_editing = True
             etat_id = int(1 if int.from_bytes(edit_book.state, "big") == 1 else 0)
             work_media = WorkMediaList.objects.filter(id_works=edit_book)[0]
+
         if response.POST.get("edit"):
             edit_item(response, liste_info)
 

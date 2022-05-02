@@ -279,7 +279,11 @@ def create_item(response, liste_info):
             )
             livre.save()  # Enregistrement de l'objet
 
-            w = WorkMediaList(id_works=livre, photo_path_work=str(response.POST.get('work_media')))
+            if response.POST.get('work_media') == '':
+                img_path = 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg'
+            else: 
+                img_path = str(response.POST.get('work_media'))
+            w = WorkMediaList(id_works=livre, photo_path_work=img_path)
             w.save()
             print("livre créé")
             return True  # Retourne True si il le livre est créé.
@@ -357,7 +361,14 @@ def edit_item(response, liste_info):
         item.type_work = str(type_livre)
         item.price = decimal.Decimal(price)
         item.save()
-        work_media.photo_path_work = str(response.POST.get('work_media'))
+
+        if response.POST.get('work_media') == '':
+            img_path = 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg'
+        else: 
+            img_path = str(response.POST.get('work_media'))
+
+
+        work_media.photo_path_work = img_path
         work_media.save()
     except Exception as e:
         print(e)
