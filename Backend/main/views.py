@@ -26,6 +26,17 @@ def home(response):
 
     return render(response, "main/acceuil.html", {} | default_dict)
 
+def advancedsearch(response):
+    """
+    Page d'acceuil.
+
+    :param response:
+    :return:
+    """
+    # Page d'acceuil du site web
+
+    return render(response, "main/advancedsearch.html", {} | default_dict)
+
 
 def search(response, name: Optional[str] = ""):
     """
