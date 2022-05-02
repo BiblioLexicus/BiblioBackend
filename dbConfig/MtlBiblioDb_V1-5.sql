@@ -147,7 +147,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
   `ID_Users` VARCHAR(18) NOT NULL,
   `Photo_Path_Users` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png',
-    PRIMARY KEY (`ID_Users`),
+  PRIMARY KEY (`ID_Users`),
   INDEX `fk_Media_Users_List1_idx` (`ID_Users` ASC) VISIBLE,
   CONSTRAINT `fk_Media_Users_List1`
     FOREIGN KEY (`ID_Users`)

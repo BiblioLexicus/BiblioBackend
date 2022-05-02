@@ -6,7 +6,7 @@ from django.utils.html import escape
 
 from .commands import *
 from .IDEnums import *
-from .models import LibrariesData
+from .models import LibrariesData, WorkMediaList
 
 default_dict = {
     "organisation_name": os.getenv("ORGANISATION_NAME"),
@@ -55,10 +55,17 @@ def search(response, name: Optional[str] = ""):
 
     out_liste = search_item_by_name(name=name)  # Liste de résultats
 
+    livre_and_image = []
+
+    for livre in out_liste:
+        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work)
+        livre_and_image.append(tup)
+
+
     return render(
         response,
         "main/search.html",
-        {"name": name, "liste_livres": out_liste} | default_dict,
+        {"name": name, "livre_and_image": livre_and_image} | default_dict,
     )
 
 
@@ -74,6 +81,8 @@ def item(response, item_id):
 
     info_livre = search_precise_item(item_id)  # Item specifique à afficher
     info_livre = info_livre[0]
+
+    image_livre = WorkMediaList.objects.filter(id_works=info_livre)[0].photo_path_work
 
     if response.method == "GET":
         if response.GET.get("emprunt"):
@@ -100,6 +109,7 @@ def item(response, item_id):
             "livre": info_livre,
             "state_of_emprunt": state_of_emprunt,
             "list_user": liste_users,
+            "image_livre": image_livre
         }
         | default_dict,
     )
@@ -148,6 +158,7 @@ def administration(response):
     type_edit = ""
     are_we_editing = False
     etat_id = 0
+    work_media=None
 
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
@@ -172,7 +183,7 @@ def administration(response):
             type_edit = str(WorkTypeEnum[edit_book.type_work].value)
             are_we_editing = True
             etat_id = int(1 if int.from_bytes(edit_book.state, "big") == 1 else 0)
-
+            work_media = WorkMediaList.objects.filter(id_works=edit_book)[0]
         if response.POST.get("edit"):
             edit_item(response, liste_info)
 
@@ -189,6 +200,7 @@ def administration(response):
             "type": type_edit,
             "edit_mode": are_we_editing,
             "etat_id": etat_id,
+            "work_media": work_media
         }
         | default_dict,
     )
