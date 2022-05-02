@@ -135,6 +135,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
   `ID_Works` VARCHAR(20) NOT NULL,
   `Photo_Path_Work` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg',
+  PRIMARY KEY (`ID_Works`),
   INDEX `fk_Media_Work_List1_idx` (`ID_Works` ASC) VISIBLE,
   CONSTRAINT `fk_Media_Work_List1`
     FOREIGN KEY (`ID_Works`)
@@ -145,7 +146,8 @@ CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`Work_Media_List`(
 ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `BiblioLexicusDB`.`User_Media_List`(
   `ID_Users` VARCHAR(18) NOT NULL,
-  `Photo_Path_Users` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.pnghttps://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png',
+  `Photo_Path_Users` VARCHAR(255) DEFAULT 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png',
+    PRIMARY KEY (`ID_Users`),
   INDEX `fk_Media_Users_List1_idx` (`ID_Users` ASC) VISIBLE,
   CONSTRAINT `fk_Media_Users_List1`
     FOREIGN KEY (`ID_Users`)
