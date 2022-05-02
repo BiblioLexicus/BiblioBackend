@@ -26,6 +26,7 @@ def home(response):
 
     return render(response, "main/accueil.html", {} | default_dict)
 
+
 def advancedsearch(response):
     """
     Page d'acceuil.
@@ -250,7 +251,7 @@ def panier(response):
     :return:
     """
     user = get_user(response)
-    liste_emprunts = LoanedWorks.objects.filter(id_users=user.id_users)
+    liste_emprunts = search_emprunt(user.id_users)
 
     return render(
         response, "main/panier.html", {"liste_emprunts": liste_emprunts} | default_dict
