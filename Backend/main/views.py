@@ -19,8 +19,8 @@ def home(response):
     """
     Page d'accueil.
 
-    :param response:
-    :return:
+    :param response: La requête
+    :return: la page d'accueil du site web
     """
     # Page d'accueil du site web
 
@@ -29,10 +29,10 @@ def home(response):
 
 def advancedsearch(response):
     """
-    Page d'acceuil.
+    Page de recherche avancée
 
-    :param response:
-    :return:
+    :param response: La requête
+    :return: la page de recherche avancée
     """
     # Page d'acceuil du site web
 
@@ -42,10 +42,9 @@ def advancedsearch(response):
 def search(response, name: Optional[str] = ""):
     """
     Search for an item.
-
     :param response:
     :param name: The name of the item
-    :return:
+    :return: the search results page
     """
     name = escape(name)
 
@@ -108,10 +107,11 @@ def item(response, item_id):
 
 def administration(response):
     """
-    TODO
+    Administration page. Enables creation, modification and deletion of books
+    Enables searches
 
-    :param response:
-    :return:
+    :param response: requête
+    :return: page d'administation
     """
     try:
         id_user = response.COOKIES["id_user"]
@@ -196,10 +196,10 @@ def administration(response):
 
 def profile(request):
     """
+    presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
 
-
-    :param request:
-    :return:
+    :param request: requête
+    :return: page de profil
     """
 
     log = request.COOKIES["is_logged"]
