@@ -58,9 +58,11 @@ def search(response, name: Optional[str] = ""):
     livre_and_image = []
 
     for livre in out_liste:
-        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work)
+        tup = (
+            livre,
+            WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work,
+        )
         livre_and_image.append(tup)
-
 
     return render(
         response,
@@ -71,11 +73,11 @@ def search(response, name: Optional[str] = ""):
 
 def item(response, item_id):
     """
+    Page d'item.
 
-
-    :param response:
-    :param item_id:
-    :return:
+    :param response: La requête
+    :param item_id: L'ID de l'item.
+    :return: La page de l'item.
     """
     state_of_emprunt = None
 
@@ -109,7 +111,7 @@ def item(response, item_id):
             "livre": info_livre,
             "state_of_emprunt": state_of_emprunt,
             "list_user": liste_users,
-            "image_livre": image_livre
+            "image_livre": image_livre,
         }
         | default_dict,
     )
@@ -158,7 +160,7 @@ def administration(response):
     type_edit = ""
     are_we_editing = False
     etat_id = 0
-    work_media=None
+    work_media = None
 
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
@@ -200,7 +202,7 @@ def administration(response):
             "type": type_edit,
             "edit_mode": are_we_editing,
             "etat_id": etat_id,
-            "work_media": work_media
+            "work_media": work_media,
         }
         | default_dict,
     )
@@ -208,7 +210,7 @@ def administration(response):
 
 def profile(request):
     """
-    presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
+    Presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
 
     :param request: requête
     :return: page de profil
@@ -245,10 +247,10 @@ def profile(request):
 
 def panier(response):
     """
+    Page qui montre les livres d'un user
 
-
-    :param response:
-    :return:
+    :param response: La requête
+    :return: La page d'items enpruntés
     """
     user = get_user(response)
     liste_emprunts = search_emprunt(user.id_users)
