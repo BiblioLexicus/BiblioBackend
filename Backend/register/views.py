@@ -1,11 +1,8 @@
-import os
-
 from django.shortcuts import render
+from main.views import default_dict
 from register.commands import *
 
 # Create your views here.
-
-default_dict = {"organisation_name": os.getenv("ORGANISATION_NAME")}
 
 
 def login(request):

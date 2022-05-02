@@ -17,14 +17,14 @@ organisation_name = os.getenv("ORGANISATION_NAME")
 
 def home(response):
     """
-    Page d'acceuil.
+    Page d'accueil.
 
     :param response:
     :return:
     """
-    # Page d'acceuil du site web
+    # Page d'accueil du site web
 
-    return render(response, "main/acceuil.html", {} | default_dict)
+    return render(response, "main/accueil.html", {} | default_dict)
 
 
 def search(response, name: Optional[str] = ""):
@@ -151,9 +151,7 @@ def administration(response):
 
         if response.POST.get("Modifier"):
             work = response.POST.get("id_work")
-            edit_book = search_precise_item(
-                str(work)
-            )[0]
+            edit_book = search_precise_item(str(work))[0]
             date_str = edit_book.publication_date.strftime("%Y-%m-%d")
             genre = str(WorkCategoryEnums[edit_book.genre].value)
             etat = str(
