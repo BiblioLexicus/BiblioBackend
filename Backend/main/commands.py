@@ -151,7 +151,6 @@ def search_precise_item(item_id: str) -> QuerySet:
     return item
 
 
-# Fonction qui sert a faire la recherche dans la page d'administration
 def administration_search(query):
     """
     Recherche dans la page d'administration
@@ -312,6 +311,9 @@ def delete_item(response):
         liste_commentaires = Comments.objects.filter(id_works=book)
         for commentaire in liste_commentaires:
             commentaire.delete()
+
+    work_media = WorkMediaList.objects.filter(id_works=book)[0]
+    work_media.delete()
 
     WorkList.objects.filter(id_works=str(id_delete)).delete()  # Delete le livre
 
