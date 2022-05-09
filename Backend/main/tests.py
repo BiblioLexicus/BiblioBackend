@@ -8,6 +8,7 @@ from .models import *
 
 # Create your tests here.
 class TestWorks(TestCase):
+    """
     library = LibrariesData(
         schedules="",
         postal_code="",
@@ -28,8 +29,6 @@ class TestWorks(TestCase):
         type_work="qq",
         price=12.1,
     )
-    # User is a WIP, I'll comment it until further notices
-    """
     user = LibraryUserProfile(
         password_hash="",
         name="User",
@@ -43,9 +42,6 @@ class TestWorks(TestCase):
         related_library_id="",
     )
     """
-    # user.save()
-    work.save()
-    library.save()
 
     """    
     try:
