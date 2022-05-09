@@ -51,9 +51,13 @@ def search(response, name: Optional[str] = ""):
     recherche = search_home(response)
 
     resultats = resultats_possibles(recherche)
+    resultats_final = []
+
+    for book in resultats:
+        resultats_final.append(book[0])
     
     if resultats:
-        return render(response, 'main/complementation.html', {'resultats': resultats} | default_dict)
+        return render(response, 'main/complementation.html', {'resultats': resultats_final} | default_dict)
 
     if recherche:
         return redirect("/search/" + str(recherche))
@@ -63,7 +67,8 @@ def search(response, name: Optional[str] = ""):
     livre_and_image = []
 
     for livre in out_liste:
-        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work)
+        lib = LibrariesData.objects.filter(id_library=livre.id_library)[0]
+        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work, lib)
         livre_and_image.append(tup)
 
 

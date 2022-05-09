@@ -16,7 +16,7 @@ def resultats_possibles(recherche):
     all_works_name = {works.name_works:{} for works in WorkList.objects.all()}
 
     autocomplete = AutoComplete(words=all_works_name)
-    all_matched_works = autocomplete.search(word=str(recherche), max_cost=5, size=10)
+    all_matched_works = autocomplete.search(word=str(recherche), max_cost=3, size=10)
 
     return all_matched_works
     
