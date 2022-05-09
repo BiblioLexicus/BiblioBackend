@@ -11,7 +11,9 @@ from PyInquirer.prompt import prompt
 
 
 def main():
-    # Set up Project for testing and deployment
+    """
+    Set up Project for testing and deployment
+    """
     args = set_args()
 
     # Setup logging
@@ -50,6 +52,10 @@ def main():
 
 
 def set_args() -> argparse.Namespace:
+    """Mets en place les arguments.
+
+    :return: Les arguments.
+    """
     # Parse user inputs
     parser = argparse.ArgumentParser(
         description="Setup BiBlioLexicus project.",
@@ -209,11 +215,19 @@ def set_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def default():
+def default() -> str:
+    """
+    Retourne un string pour que argparse puisse mettre la valeur par défaut
+    """
     return " (default: %(default)s) "
 
 
 def setenv(args, log):
+    """Mets à jour les variables allant dans .env
+
+    :param args: Les arguments
+    :param log: Le logger
+    """
     # Constants
     output_file = ".env"
 
@@ -252,9 +266,10 @@ def setenv(args, log):
         if not args.AUTO and not args.CI_TEST:
             # Manual input for environment variables
             if not env == "ENGINE":
+                question_type = "input" if env != "DB_PASSWORD" else "password"
                 question = [
                     {
-                        "type": "input",
+                        "type": question_type,
                         "name": "environ",
                         "message": f"Enter the {env} (Default: {var}):",
                         "default": str(var),
@@ -298,7 +313,10 @@ def setenv(args, log):
     if not args.CI_TEST:  # No need to verify in CI-CD environment
         # Confirm final envs
         log.info("\nFinal `.env` file output:\n")
-        log.info(output + "\n")
+        log.info(
+            re.sub("(DB_PASSWORD|SECRET_KEY)=[^\n]*\n", "--SECRET_HERE--=\n", output)
+            + "\n"
+        )
         question = [
             {
                 "type": "confirm",
@@ -326,7 +344,12 @@ def setenv(args, log):
 
 
 def setup_pages(args, log):
-    # Move html files from other repository / folder
+    """
+    Move html files from other repository / folder
+
+    :param args: Les arguments
+    :param log: Le logger
+    """
 
     if args.SKIP_PAGES or args.CI_TEST:
         return  # Skip pages
