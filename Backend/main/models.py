@@ -150,6 +150,7 @@ class WorkList(models.Model):
     )  # Field name made lowercase.
     state = models.BinaryField(
         db_column="State"
+
     )  # Field name made lowercase. This field type is a guess.
     copy_number = models.PositiveIntegerField(
         db_column="Copy_Number"
