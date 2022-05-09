@@ -28,7 +28,7 @@ class Comments(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Comments"
         unique_together = (("id_comments", "id_works", "id_users"),)
 
@@ -57,7 +57,7 @@ class LibrariesData(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Libraries_Data"
 
 
@@ -71,12 +71,12 @@ class LoanedWorks(models.Model):
     id_users = models.ForeignKey(
         "UserList", models.DO_NOTHING, db_column="ID_Users"
     )  # Field name made lowercase.
-    work_lost = models.TextField(
+    work_lost = models.BinaryField(
         db_column="Work_Lost"
     )  # Field name made lowercase. This field type is a guess.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Loaned_Works"
         unique_together = (("id_works", "id_users"),)
 
@@ -86,7 +86,7 @@ class UserList(models.Model):
         db_column="ID_Users", primary_key=True, max_length=16
     )  # Field name made lowercase.
     password_hash = models.CharField(
-        db_column="Password_Hash", max_length=32
+        db_column="Password_Hash", max_length=255
     )  # Field name made lowercase.
     name = models.CharField(
         db_column="Name", max_length=50
@@ -99,10 +99,10 @@ class UserList(models.Model):
         db_column="Fees", max_digits=10, decimal_places=0
     )  # Field name made lowercase.
     email = models.CharField(
-        db_column="Email", unique=True, max_length=320
+        db_column="Email", unique=True, max_length=255
     )  # Field name made lowercase.
     addresse_postale = models.CharField(
-        db_column="Addresse_Postale", max_length=6
+        db_column="Postal_Code", max_length=6
     )  # Field name made lowercase.
     expiration_subscription = models.DateField(
         db_column="Expiration_Subscription"
@@ -115,19 +115,20 @@ class UserList(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "User_List"
 
 
 class WorkList(models.Model):
     id_works = models.CharField(
-        db_column="ID_Works", primary_key=True, max_length=16
+        db_column="ID_Works", primary_key=True, max_length=20
     )  # Field name made lowercase.
+    id_library = models.IntegerField(db_column="ID_Library")
     name_works = models.CharField(
         db_column="Name_Works", max_length=50
     )  # Field name made lowercase.
     author_name = models.CharField(
-        db_column="Author_Name", max_length=250
+        db_column="Author_Name", max_length=255
     )  # Field name made lowercase.
     publication_date = models.DateField(
         db_column="Publication_Date"
@@ -138,7 +139,7 @@ class WorkList(models.Model):
     length = models.PositiveIntegerField(
         db_column="Length"
     )  # Field name made lowercase.
-    resume = models.CharField(
+    resume = models.TextField(
         db_column="Resume", max_length=2000
     )  # Field name made lowercase.
     genre = models.CharField(
@@ -147,8 +148,9 @@ class WorkList(models.Model):
     language = models.CharField(
         db_column="Language", max_length=18
     )  # Field name made lowercase.
-    state = models.CharField(
-        db_column="State", max_length=2
+    state = models.BinaryField(
+        db_column="State"
+
     )  # Field name made lowercase. This field type is a guess.
     copy_number = models.PositiveIntegerField(
         db_column="Copy_Number"
@@ -161,5 +163,58 @@ class WorkList(models.Model):
     )  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "Work_List"
+
+
+"""
+class Work_Media_List(models.Model):
+    id_works = models.ForeignKey(
+        "WorkList", on_delete=models.CASCADE, db_column="ID_Works"
+    )
+    photo_path_work = models.TextField(
+        max_length=10000,
+        default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg",
+    )
+    class Meta:
+        managed = True
+        db_table = "Work_Media_List"
+
+
+class User_Media_List(models.Model):
+    id_user = models.ForeignKey(
+        "WorkList", on_delete=models.CASCADE, db_column="User_List"
+    )
+    photo_path_work = models.TextField(
+        max_length=10000,
+        default="https://raw.githubusercontent.com/BiblioLexicus/Design/main/BiblioLex.png",
+    )
+    class Meta:
+        managed = True
+        db_table = "User_Media_List"""
+
+
+class WorkMediaList(models.Model):
+    id_works = models.ForeignKey(
+        "WorkList", models.DO_NOTHING, db_column="ID_Works", primary_key=True
+    )
+    photo_path_work = models.CharField(
+        db_column="Photo_Path_Work", max_length=255, blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = "Work_Media_List"
+
+
+class UserMediaList(models.Model):
+    id_users = models.ForeignKey(
+        "UserList", models.DO_NOTHING, db_column="ID_Users", primary_key=True
+    )
+    photo_path_users = models.CharField(
+        db_column="Photo_Path_Users", max_length=255, blank=True, null=True
+    )  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = "User_Media_List"
