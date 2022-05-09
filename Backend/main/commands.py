@@ -1,5 +1,6 @@
 import decimal
 import random
+from fast_autocomplete import AutoComplete
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
@@ -9,6 +10,17 @@ from django.shortcuts import redirect
 from .IDEnums import *
 from .IDManagement import *
 from .models import Comments, LoanedWorks, UserList, WorkList, WorkMediaList
+
+
+def resultats_possibles(recherche):
+    all_works_name = {works.name_works:{} for works in WorkList.objects.all()}
+
+    autocomplete = AutoComplete(words=all_works_name)
+    all_matched_works = autocomplete.search(word=str(recherche), max_cost=5, size=10)
+
+    return all_matched_works
+    
+
 
 
 def voir_commentaire(response, item_id):

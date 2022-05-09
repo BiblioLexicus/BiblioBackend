@@ -49,8 +49,13 @@ def search(response, name: Optional[str] = ""):
     name = escape(name)
 
     recherche = search_home(response)
+
+    resultats = resultats_possibles(recherche)
+    
+    if resultats:
+        return render(response, 'main/complementation.html', {'resultats': resultats} | default_dict)
+
     if recherche:
-        print(recherche)
         return redirect("/search/" + str(recherche))
 
     out_liste = search_item_by_name(name=name)  # Liste de résultats
@@ -58,11 +63,9 @@ def search(response, name: Optional[str] = ""):
     livre_and_image = []
 
     for livre in out_liste:
-        tup = (
-            livre,
-            WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work,
-        )
+        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work)
         livre_and_image.append(tup)
+
 
     return render(
         response,
@@ -73,11 +76,11 @@ def search(response, name: Optional[str] = ""):
 
 def item(response, item_id):
     """
-    Page d'item.
 
-    :param response: La requête
-    :param item_id: L'ID de l'item.
-    :return: La page de l'item.
+
+    :param response:
+    :param item_id:
+    :return:
     """
     state_of_emprunt = None
 
@@ -111,7 +114,7 @@ def item(response, item_id):
             "livre": info_livre,
             "state_of_emprunt": state_of_emprunt,
             "list_user": liste_users,
-            "image_livre": image_livre,
+            "image_livre": image_livre
         }
         | default_dict,
     )
@@ -160,7 +163,7 @@ def administration(response):
     type_edit = ""
     are_we_editing = False
     etat_id = 0
-    work_media = None
+    work_media=None
 
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
@@ -186,7 +189,6 @@ def administration(response):
             are_we_editing = True
             etat_id = int(1 if int.from_bytes(edit_book.state, "big") == 1 else 0)
             work_media = WorkMediaList.objects.filter(id_works=edit_book)[0]
-
         if response.POST.get("edit"):
             edit_item(response, liste_info)
 
@@ -203,7 +205,7 @@ def administration(response):
             "type": type_edit,
             "edit_mode": are_we_editing,
             "etat_id": etat_id,
-            "work_media": work_media,
+            "work_media": work_media
         }
         | default_dict,
     )
@@ -211,7 +213,7 @@ def administration(response):
 
 def profile(request):
     """
-    Presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
+    presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
 
     :param request: requête
     :return: page de profil
@@ -248,10 +250,10 @@ def profile(request):
 
 def panier(response):
     """
-    Page qui montre les livres d'un user
 
-    :param response: La requête
-    :return: La page d'items enpruntés
+
+    :param response:
+    :return:
     """
     user = get_user(response)
     liste_emprunts = search_emprunt(user.id_users)
