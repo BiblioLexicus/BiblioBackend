@@ -108,7 +108,8 @@ env/
 venv/
 ENV/
 env.bak/
-venv.bak/
+venv.bak/S
+.data-region-340621-90cd628b6471.json
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +128,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE folders
+.idea
+.vs
+
+# Project-specific ignores
+templates/
+migrations/

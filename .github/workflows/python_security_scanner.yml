@@ -1,0 +1,30 @@
+name: Python security scanner CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ Dev ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+    steps:
+    - name: PyCharm Python Security Scanner
+      uses: tonybaloney/pycharm-security@1.25.1
+      with:
+        # Project Directory
+        path: .
+        # Path to an inspection profile XML file
+        profile: /sources/SecurityInspectionProfile.xml
+        # Fail the task if warnings were found in the code
+        fail_on_warnings: no
+        # Subdirectory within path containing Python source
+        source: Backend
+        # File containing a list of Python packages to be installed before scanning
+        requirements: poetry.lock
