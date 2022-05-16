@@ -57,14 +57,14 @@ poetry run pre-commit install -t=pre-commit -t=pre-push
 
 Installer toute nouvelle dépendance avec `poetry add <package>`
 
-####Créer une base de données
+#### Créer une base de données
 
 > Pour le moment, utiliser le fichier sql fourni (dbconfig/MtlBiblioDb_V1-5.sql) pour créer une base de données et spécifier que vous utilisez cette
 > base de données dans le .env
 
 La base de données doit supporter InnoDB en tant que moteur de stockage.
 
-####Configuration et lancement du serveur
+#### Configuration et lancement du serveur
 
 Après avoir installé toutes les dépendances avec poetry, rentrez dans environment avec `poetry shell`
 
@@ -146,14 +146,14 @@ curl -sSL https://install.python-poetry.org | python3 -
 poetry run pre-commit install -t=pre-commit -t=pre-push
 ```
 
-####Database configuration
+#### Database configuration
 
 Install any new dependency with `poetry add <package>`
 > For the time being, create a mysql database using the config (dbconfig/MtlBiblioDb_V1-5.sql) file and specify its name in a .env file
 
 La base de données doit supporter InnoDB en tant que moteur de stockage.
 
-####Configuration and start of server
+#### Configuration and start of server
 
 After installing the dependencies with Poetry, enter the new environment with `poetry shell`
 
