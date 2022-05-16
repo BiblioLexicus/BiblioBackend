@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import re
+import subprocess
 import sys
 from urllib import request
 
@@ -23,11 +24,6 @@ def main():
 
     logging.basicConfig(stream=sys.stdout, level=log_level, format="%(message)s")
     log = logging.getLogger()
-
-    # Check for good setup
-    if args.DEBUG == args.DEPLOY:
-        log.error("Please choose between `--deploy` or `--debug` before proceeding!")
-        exit(1)
 
     # Start of configuration
     log.info(
@@ -464,9 +460,10 @@ def setup_pages(args, log):
 
     log.info("\nStarting mover script...")
     log.info("> " + command)
-    os.system(
-        command
+    proc = subprocess.Popen(
+        command, stdout=subprocess.PIPE
     )  # This code is safe. It will only copy the files from the html repository to the project.
+    proc.wait()
     # It can be seen here https://github.com/BBArikL/move_django_html/blob/master/mv_django_html.py
     log.info("Mover script done!")
 
