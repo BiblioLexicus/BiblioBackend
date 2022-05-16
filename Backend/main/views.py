@@ -1,12 +1,27 @@
 import os
 from typing import Optional
 
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.utils.html import escape
 
-from .commands import *
-from .IDEnums import *
-from .models import LibrariesData, WorkMediaList
+from .commands import (
+    administration_search,
+    ajouter_commentaire,
+    create_item,
+    delete_item,
+    edit_item,
+    emprunter,
+    get_user,
+    redirect,
+    resultats_possibles,
+    search_emprunt,
+    search_home,
+    search_item_by_name,
+    search_precise_item,
+    voir_commentaire,
+)
+from .IDEnums import WorkCategoryEnums, WorkTypeEnum
+from .models import LibrariesData, UserList, WorkMediaList
 
 default_dict = {
     "organisation_name": os.getenv("ORGANISATION_NAME"),
@@ -55,9 +70,13 @@ def search(response, name: Optional[str] = ""):
 
     for book in resultats:
         resultats_final.append(book[0])
-    
+
     if resultats:
-        return render(response, 'main/complementation.html', {'resultats': resultats_final} | default_dict)
+        return render(
+            response,
+            "main/complementation.html",
+            {"resultats": resultats_final} | default_dict,
+        )
 
     if recherche:
         return redirect("/search/" + str(recherche))
@@ -68,9 +87,12 @@ def search(response, name: Optional[str] = ""):
 
     for livre in out_liste:
         lib = LibrariesData.objects.filter(id_library=livre.id_library)[0]
-        tup = (livre, WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work, lib)
+        tup = (
+            livre,
+            WorkMediaList.objects.filter(id_works=livre.id_works)[0].photo_path_work,
+            lib,
+        )
         livre_and_image.append(tup)
-
 
     return render(
         response,
@@ -81,11 +103,11 @@ def search(response, name: Optional[str] = ""):
 
 def item(response, item_id):
     """
+    La page d'item
 
-
-    :param response:
-    :param item_id:
-    :return:
+    :param response: La requête Django
+    :param item_id: L'ID de l'item
+    :return: La page de l'item.
     """
     state_of_emprunt = None
 
@@ -103,7 +125,7 @@ def item(response, item_id):
         if response.POST.get("commSave"):
             ajouter_commentaire(response)
 
-    liste_commentaires = voir_commentaire(response, item_id)
+    liste_commentaires = voir_commentaire(item_id)
     liste_users = []
 
     for com in liste_commentaires:
@@ -119,7 +141,7 @@ def item(response, item_id):
             "livre": info_livre,
             "state_of_emprunt": state_of_emprunt,
             "list_user": liste_users,
-            "image_livre": image_livre
+            "image_livre": image_livre,
         }
         | default_dict,
     )
@@ -168,7 +190,7 @@ def administration(response):
     type_edit = ""
     are_we_editing = False
     etat_id = 0
-    work_media=None
+    work_media = None
 
     if response.method == "GET":
         if response.GET.get("searchAdmin"):
@@ -210,7 +232,7 @@ def administration(response):
             "type": type_edit,
             "edit_mode": are_we_editing,
             "etat_id": etat_id,
-            "work_media": work_media
+            "work_media": work_media,
         }
         | default_dict,
     )
@@ -218,7 +240,7 @@ def administration(response):
 
 def profile(request):
     """
-    presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
+    Presente page de profil de l'usager et l'ensemble des livres qu'il a emprunté
 
     :param request: requête
     :return: page de profil
@@ -255,10 +277,10 @@ def profile(request):
 
 def panier(response):
     """
+    Le panier de l'utilisateur.
 
-
-    :param response:
-    :return:
+    :param response: La requête Django
+    :return: Le panier de l'utilisateur
     """
     user = get_user(response)
     liste_emprunts = search_emprunt(user.id_users)

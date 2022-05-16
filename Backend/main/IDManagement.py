@@ -4,10 +4,10 @@ import random
 
 def intToid2Char(val_int):
     """
-    permet de convertire un nombre en base 32
+    Permet de convertir un nombre en base 32
 
-    :param val_int: nombre à convertire
-    :return: nombre convertie en base 32
+    :param val_int: nombre à convertir
+    :return: nombre converti en base 32
     """
     convertion_tab = {
         10: "a",

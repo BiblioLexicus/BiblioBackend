@@ -29,6 +29,8 @@ repos:
         args:
           - run
           - isort
+          - --profile
+          - black
         language: system
         types: [ python ]
         stages: [ commit ]

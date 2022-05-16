@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from main.models import UserList
 from main.views import default_dict
-from register.commands import *
+from register.commands import connexion, creation_utilisateur
 
 # Create your views here.
 
@@ -8,10 +9,9 @@ from register.commands import *
 def login(request):
     """
     Login.
-    TODO: models.py a une fonction userlist + username + email. On peut avoir accès a cela quand on crée django
 
-    :param request:
-    :return:
+    :param request: La requête Django
+    :return: La page de login
     """
     response = render(request, "registration/login.html", {"log": False} | default_dict)
 
@@ -48,8 +48,8 @@ def register(request):
     """
     Enregistre un nouvel utilisateur.
 
-    :param request:
-    :return:
+    :param request: La requête Django
+    :return: La page d'enregistrement
     """
     creation = None
 
@@ -75,8 +75,8 @@ def logout(request):
     """
     Déconnexion d'un utilisateur.
 
-    :param request:
-    :return:
+    :param request: La requête Django
+    :return: La page de logout
     """
     response = render(request, "registration/logout.html", {} | default_dict)
 

@@ -2,7 +2,7 @@ import decimal
 from datetime import datetime
 
 from django.contrib.auth.hashers import check_password, make_password
-from main.IDManagement import *
+from main.IDManagement import generalIdCreationAndManagement
 from main.models import UserList
 
 
@@ -45,7 +45,7 @@ def creation_utilisateur(request):
         hashedPwd = make_password(
             str(passwordNotHash)
         )  # Built-in django function to hash password
-    except:
+    except Exception:
         return False
 
     if not verification_existence(email):
@@ -83,10 +83,10 @@ def connexion(request):
     """
     try:
         email = request.POST.get("email")
-        passwordNotHashed = request.POST.get("mdplogin")
+        password_not_hashed = request.POST.get("mdplogin")
 
         if check_password(
-            passwordNotHashed, UserList.objects.filter(email=email)[0].password_hash
+            password_not_hashed, UserList.objects.filter(email=email)[0].password_hash
         ):  # Built-in django function to check hash
             return (
                 True,

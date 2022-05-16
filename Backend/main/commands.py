@@ -1,29 +1,27 @@
 import decimal
 import random
-from fast_autocomplete import AutoComplete
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
 from django.db.models.query import QuerySet
 from django.shortcuts import redirect
+from fast_autocomplete import AutoComplete
 
-from .IDEnums import *
-from .IDManagement import *
+from .IDEnums import PermissionEnums
+from .IDManagement import additionOfMultipleSameBooks, generalIdCreationAndManagement
 from .models import Comments, LoanedWorks, UserList, WorkList, WorkMediaList
 
 
 def resultats_possibles(recherche):
-    all_works_name = {works.name_works:{} for works in WorkList.objects.all()}
+    all_works_name = {works.name_works: {} for works in WorkList.objects.all()}
 
     autocomplete = AutoComplete(words=all_works_name)
     all_matched_works = autocomplete.search(word=str(recherche), max_cost=3, size=10)
 
     return all_matched_works
-    
 
 
-
-def voir_commentaire(response, item_id):
+def voir_commentaire(item_id):
     """
     Affiche les commentaires sur la page d'un item
 
@@ -38,7 +36,7 @@ def voir_commentaire(response, item_id):
         list_commentaires = Comments.objects.filter(id_works=livre)
         return list_commentaires
 
-    except:
+    except Exception:
         return []
 
 
@@ -47,7 +45,7 @@ def ajouter_commentaire(response):
     Ajouter un commentaire
 
     :param response: Requete DJANGO
-    :type response: requete POST 
+    :type response: requete POST
 
     :returns: Retourne rien si le livre est créé et retourne False si il y a une erreur
     :rtype: bool
@@ -68,7 +66,7 @@ def ajouter_commentaire(response):
                 comment_text=str(response.POST.get("ecritureComm")),
             )
             new_comm.save()
-        except:
+        except Exception:
             return False
 
 
@@ -77,7 +75,7 @@ def emprunter(response):
     Emprunter un item.
 
     :param response: Requete Django
-    :type response: Requete POST 
+    :type response: Requete POST
 
     :return: True si l'objet est emprunter; False si l'objet n'est pas emprunté
     :rtype: bool
@@ -115,11 +113,8 @@ def search_emprunt(user_id):
 
     liste_final = []
 
-    for (
-        livre
-    ) in (
-        liste_emprunts
-    ):  # Permet de prendre le livre dans le loaned works et non le loaned works.
+    for livre in liste_emprunts:
+        # Permet de prendre le livre dans le loaned works et non le loaned works.
         liste_final.append(livre.id_works)
 
     return liste_final
@@ -180,9 +175,9 @@ def creation_id_default(librarie_id, genre, type_livre):
     """
     Creation de l'ID de livre par défaut
 
-    :param librairie_id: ID de la librairie
+    :param librarie_id: ID de la librairie
     :param genre: genre du livre
-    :type_livre: type du livre
+    :param type_livre: type du livre
 
     :returns: Retourne numero de copie du livre ainsi que son ID.
     """
@@ -290,10 +285,10 @@ def create_item(response, liste_info):
             )
             livre.save()  # Enregistrement de l'objet
 
-            if response.POST.get('work_media') == '':
-                img_path = 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg'
-            else: 
-                img_path = str(response.POST.get('work_media'))
+            if response.POST.get("work_media") == "":
+                img_path = "https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg"
+            else:
+                img_path = str(response.POST.get("work_media"))
             w = WorkMediaList(id_works=livre, photo_path_work=img_path)
             w.save()
             print("livre créé")
@@ -376,11 +371,10 @@ def edit_item(response, liste_info):
         item.price = decimal.Decimal(price)
         item.save()
 
-        if response.POST.get('work_media') == '':
-            img_path = 'https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg'
-        else: 
-            img_path = str(response.POST.get('work_media'))
-
+        if response.POST.get("work_media") == "":
+            img_path = "https://raw.githubusercontent.com/BiblioLexicus/Design/main/Book_image_not_found.jpg"
+        else:
+            img_path = str(response.POST.get("work_media"))
 
         work_media.photo_path_work = img_path
         work_media.save()
