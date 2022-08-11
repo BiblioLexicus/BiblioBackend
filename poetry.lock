@@ -68,7 +68,7 @@ python-versions = "*"
 
 [[package]]
 name = "django"
-version = "4.0.6"
+version = "4.0.7"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
@@ -80,8 +80,8 @@ sqlparse = ">=0.2.2"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
-argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
+argon2 = ["argon2-cffi (>=19.1.0)"]
 
 [[package]]
 name = "django-crispy-forms"
@@ -118,8 +118,8 @@ python-versions = "*"
 pylev = {version = ">=1.4.0", optional = true, markers = "extra == \"pylev\""}
 
 [package.extras]
-levenshtein = ["python-Levenshtein (>=0.12.2)"]
 pylev = ["pylev (>=1.4.0)"]
+levenshtein = ["python-Levenshtein (>=0.12.2)"]
 
 [[package]]
 name = "filelock"
@@ -452,7 +452,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "742ce43126ee5f75530e2d10cbfeaf02e9676cd8fb1205ecc8031c61655edb20"
+content-hash = "996d15f975e7a35ea2dac3b314cb10a1aa89d1b40cf7690c2d56fc60e3c5a656"
 
 [metadata.files]
 asgiref = [
@@ -501,8 +501,8 @@ distlib = [
     {file = "distlib-0.3.4.zip", hash = "sha256:e4b58818180336dc9c529bfb9a0b58728ffc09ad92027a3f30b7cd91e3458579"},
 ]
 django = [
-    {file = "Django-4.0.6-py3-none-any.whl", hash = "sha256:ca54ebedfcbc60d191391efbf02ba68fb52165b8bf6ccd6fe71f098cac1fe59e"},
-    {file = "Django-4.0.6.tar.gz", hash = "sha256:a67a793ff6827fd373555537dca0da293a63a316fe34cb7f367f898ccca3c3ae"},
+    {file = "Django-4.0.7-py3-none-any.whl", hash = "sha256:41bd65a9e5f8a89cdbfa7a7bba45cd7431ae89e750af82dea8a35fd1a7ecbe66"},
+    {file = "Django-4.0.7.tar.gz", hash = "sha256:9c6d5ad36be798e562ddcaa6b17b1c3ff2d3c4f529a47432b69fb9a30f847461"},
 ]
 django-crispy-forms = [
     {file = "django-crispy-forms-1.14.0.tar.gz", hash = "sha256:35887b8851a931374dd697207a8f56c57a9c5cb9dbf0b9fa54314da5666cea5b"},
